@@ -20,7 +20,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs",
+                    "/v3/api-docs.yaml",
+                    "/v3/api-docs/**"
+                ).permitAll()
+                .anyRequest().permitAll()
+            )
             .addFilterBefore(new PlaceholderTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -30,6 +39,12 @@ public class SecurityConfig {
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
                 throws ServletException, IOException {
+            String path = request.getRequestURI();
+            // Swagger/OpenAPI-Pfade ohne Authentifizierung durchlassen
+            if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             String token = request.getHeader("Authorization");
             if (token == null || token.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
