@@ -33,7 +33,7 @@ class NotificationControllerTest {
         notificationRepository.deleteAll();
         notification = new Notification();
         notification.setMessage("Test");
-        notification.setReadAt(null);
+        notification.setReadAt(Instant.now());
         notification = notificationRepository.save(notification);
     }
 
@@ -46,5 +46,15 @@ class NotificationControllerTest {
         Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
         assertThat(updated.getReadAt()).isNotNull();
         assertThat(updated.getReadAt()).isAfterOrEqualTo(Instant.now().minusSeconds(5));
+    }
+
+    @Test
+    void markAsUnread_shouldSetReadAtNull() throws Exception {
+        mockMvc.perform(post("/api/notifications/" + notification.getId() + "/mark-as-unread")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        assertThat(updated.getReadAt()).isNull();
     }
 }
