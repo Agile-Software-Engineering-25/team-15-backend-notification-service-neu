@@ -40,4 +40,13 @@ public class NotificationService {
         }
         return false;
     }
+    @Transactional
+    public Optional<Notification> getAndMarkAsRead(Long id) {
+        Optional<Notification> notificationOpt = notificationRepository.findById(id);
+        notificationOpt.ifPresent(notification -> {
+            notification.setReadAt(Instant.now());
+            notificationRepository.save(notification);
+        });
+        return notificationOpt;
+    }
 }
