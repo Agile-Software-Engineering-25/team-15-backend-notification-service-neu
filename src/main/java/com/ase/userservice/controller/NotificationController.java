@@ -30,15 +30,15 @@ public class NotificationController {
         security = @SecurityRequirement(name = "TokenAuth"),
         responses = {
             @ApiResponse(responseCode = "200", description = "Notification marked as unread",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification marked as unread\"")
                 })),
             @ApiResponse(responseCode = "404", description = "Notification not found",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification not found\"")
                 })),
             @ApiResponse(responseCode = "401", description = "Authorization header missing",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Authorization header required (Mock-Auth)\"")
                 }))
         }
@@ -62,15 +62,15 @@ public class NotificationController {
         security = @SecurityRequirement(name = "TokenAuth"),
         responses = {
             @ApiResponse(responseCode = "200", description = "Notification marked as read",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification marked as read\"")
                 })),
             @ApiResponse(responseCode = "404", description = "Notification not found",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification not found\"")
                 })),
             @ApiResponse(responseCode = "401", description = "Authorization header missing",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
+                content = @Content(mediaType = "application/json", examples = {
                     @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Authorization header required (Mock-Auth)\"")
                 }))
         }
@@ -94,19 +94,19 @@ public class NotificationController {
         security = @SecurityRequirement(name = "TokenAuth"),
         responses = {
             @ApiResponse(responseCode = "200", description = "Notification found and marked as read",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Notification.class),
+                content = @Content(mediaType = "application/json",
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                         value = "{ \"id\": 1, \"message\": \"Dies ist eine Beispielbenachrichtigung\", \"readAt\": \"2024-06-27T12:34:56.789Z\" }"
                     )
                 )),
             @ApiResponse(responseCode = "404", description = "Notification not found",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
-                    @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification not found\"")
-                })),
+                content = @Content(mediaType = "application/json",
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Notification not found\"")
+                )),
             @ApiResponse(responseCode = "401", description = "Authorization header missing",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class), examples = {
-                    @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Authorization header required (Mock-Auth)\"")
-                }))
+                content = @Content(mediaType = "application/json",
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "\"Authorization header required (Mock-Auth)\"")
+                ))
         }
     )
     @GetMapping
