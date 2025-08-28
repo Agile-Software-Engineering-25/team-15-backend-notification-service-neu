@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -39,32 +38,10 @@ class NotificationControllerTest {
     }
 
     @Test
-    void markAsRead_shouldSetReadAt() throws Exception {
-        mockMvc.perform(post("/api/notifications/" + notification.getId() + "/mark-as-read")
-                .header("Authorization", "mock-token")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
-        assertThat(updated.getReadAt()).isNotNull();
-        assertThat(updated.getReadAt()).isAfterOrEqualTo(Instant.now().minusSeconds(5));
-    }
-
-    @Test
-    void markAsUnread_shouldSetReadAtNull() throws Exception {
-        mockMvc.perform(post("/api/notifications/" + notification.getId() + "/mark-as-unread")
-                .header("Authorization", "mock-token")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
-        assertThat(updated.getReadAt()).isNull();
-    }
-
-    @Test
     void getAndMarkAsRead_shouldReturnNotificationAndSetReadAt() throws Exception {
-        mockMvc.perform(get("/api/notifications/" + notification.getId())
+        mockMvc.perform(get("/api/notifications")
                 .header("Authorization", "mock-token")
+                .header("X-Notification-Id", notification.getId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(notification.getId()))
@@ -77,14 +54,46 @@ class NotificationControllerTest {
 
     @Test
     void getAndMarkAsRead_shouldReturn401IfNoAuthHeader() throws Exception {
-        mockMvc.perform(get("/api/notifications/" + notification.getId()))
+        mockMvc.perform(get("/api/notifications")
+                .header("X-Notification-Id", notification.getId()))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
     void getAndMarkAsRead_shouldReturn404IfNotFound() throws Exception {
-        mockMvc.perform(get("/api/notifications/99999")
-                .header("Authorization", "mock-token"))
+        mockMvc.perform(get("/api/notifications")
+                .header("Authorization", "mock-token")
+                .header("X-Notification-Id", 99999L))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void markAsRead_shouldSetReadAt() throws Exception {
+        mockMvc.perform(post("/api/notifications/mark-as-read")
+                .header("Authorization", "mock-token")
+                .header("X-Notification-Id", notification.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string("Notification marked as read"));
+
+        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        assertThat(updated.getReadAt()).isNotNull();
+        assertThat(updated.getReadAt()).isAfterOrEqualTo(Instant.now().minusSeconds(5));
+    }
+
+    @Test
+    void markAsUnread_shouldSetReadAtNull() throws Exception {
+        notification.setReadAt(Instant.now());
+        notificationRepository.save(notification);
+
+        mockMvc.perform(post("/api/notifications/mark-as-unread")
+                .header("Authorization", "mock-token")
+                .header("X-Notification-Id", notification.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string("Notification marked as unread"));
+
+        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        assertThat(updated.getReadAt()).isNull();
     }
 }

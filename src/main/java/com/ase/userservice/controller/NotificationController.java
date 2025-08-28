@@ -43,9 +43,10 @@ public class NotificationController {
                 }))
         }
     )
-    @PostMapping("/{id}/mark-as-unread")
+    @PostMapping("/mark-as-unread")
     public ResponseEntity<?> markAsUnread(
-        @Parameter(description = "Notification ID", example = "1") @PathVariable Long id
+        @Parameter(description = "Notification ID", example = "1")
+        @RequestHeader("X-Notification-Id") Long id
     ) {
         boolean success = notificationService.markAsUnread(id);
         if (success) {
@@ -74,9 +75,10 @@ public class NotificationController {
                 }))
         }
     )
-    @PostMapping("/{id}/mark-as-read")
+    @PostMapping("/mark-as-read")
     public ResponseEntity<?> markAsRead(
-        @Parameter(description = "Notification ID", example = "1") @PathVariable Long id
+        @Parameter(description = "Notification ID", example = "1")
+        @RequestHeader("X-Notification-Id") Long id
     ) {
         boolean success = notificationService.markAsRead(id);
         if (success) {
@@ -107,9 +109,10 @@ public class NotificationController {
                 }))
         }
     )
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<?> getAndMarkAsRead(
-        @Parameter(description = "Notification ID", example = "1") @PathVariable Long id,
+        @Parameter(description = "Notification ID", example = "1")
+        @RequestHeader("X-Notification-Id") Long id,
         @Parameter(description = "Authorization token", example = "Bearer mock-token") @RequestHeader(value = "Authorization", required = false) String authorization
     ) {
         if (authorization == null || authorization.isEmpty()) {
