@@ -1,24 +1,26 @@
 package com.ase.userservice.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Schema(description = "Notification entity")
+@Table(name = "notification")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Notification ID", example = "1")
+    @Column
     private Long id;
 
-    @Schema(description = "Notification message", example = "Dies ist eine Beispielbenachrichtigung")
+    @Column
     private String message;
 
-    @Schema(description = "Read timestamp", example = "2024-06-27T12:34:56.789Z")
+    @Column
     private Instant readAt;
 
     public Long getId() { return id; }
