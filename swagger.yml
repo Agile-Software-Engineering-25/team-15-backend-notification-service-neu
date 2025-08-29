@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: Notification Service API
+  version: "1.0"
+  description: |
+    API for managing notifications.
+    **Authentication:**
+    All endpoints require an `Authorization` header with a token (mocked for now, see ASE-494).
+servers:
+  - url: http://localhost:8080/swagger-ui/index.html
+
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        message:
+          type: string
+        readAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - message
+  parameters:
+    NotificationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: Notification ID
+
+security:
+  - TokenAuth: []
+
+paths:
+  /api/notifications/{id}/mark-as-read:
+    post:
+      summary: Mark notification as read
+      description: |
+        Sets the `readAt` timestamp to now for the given notification.
+        **Requires an `Authorization` header.**
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: Notification marked as read
+        '404':
+          description: Notification not found
+        '401':
+          description: Authorization header missing
+
+  /api/notifications/{id}/mark-as-unread:
+    post:
+      summary: Mark notification as unread
+      description: |
+        Removes the `readAt` timestamp for the given notification.
+        **Requires an `Authorization` header.**
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: Notification marked as unread
+        '404':
+          description: Notification not found
+        '401':
+          description: Authorization header missing
+
+  /api/notifications/{id}:
+    get:
+      summary: Get notification and mark as read
+      description: |
+        Returns all attributes of the notification and marks it as read (sets `readAt` to now).
+        **Requires an `Authorization` header.**
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: Notification found and marked as read
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '404':
+          description: Notification not found
+        '401':
+          description: Authorization header missing
+        format: int64
+      description: Notification ID
