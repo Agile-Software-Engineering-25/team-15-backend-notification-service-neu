@@ -47,7 +47,8 @@ class NotificationControllerTest {
             .andExpect(jsonPath("$.id").value(notification.getId()))
             .andExpect(jsonPath("$.message").value("Test-Message"));
 
-        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        Notification updated = notificationRepository
+        .findById(notification.getId()).orElseThrow();
         assertThat(updated.getReadAt()).isNotNull();
         assertThat(updated.getReadAt()).isAfterOrEqualTo(Instant.now().minusSeconds(5));
     }
@@ -76,7 +77,8 @@ class NotificationControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("Notification marked as read"));
 
-        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        Notification updated = notificationRepository
+        .findById(notification.getId()).orElseThrow();
         assertThat(updated.getReadAt()).isNotNull();
         assertThat(updated.getReadAt()).isAfterOrEqualTo(Instant.now().minusSeconds(5));
     }
@@ -93,7 +95,8 @@ class NotificationControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("Notification marked as unread"));
 
-        Notification updated = notificationRepository.findById(notification.getId()).orElseThrow();
+        Notification updated = notificationRepository
+        .findById(notification.getId()).orElseThrow();
         assertThat(updated.getReadAt()).isNull();
     }
 }
