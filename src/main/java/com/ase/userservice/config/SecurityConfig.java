@@ -31,8 +31,8 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(swaggerPaths).permitAll()
-            .anyRequest().permitAll()
+        .requestMatchers(swaggerPaths).permitAll()
+        .anyRequest().permitAll()
         )
         .addFilterBefore(
             new PlaceholderTokenFilter(),

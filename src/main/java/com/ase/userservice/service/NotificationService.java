@@ -1,11 +1,9 @@
-package com.ase.userservice.service;
 
+package com.ase.userservice.service;
 import java.time.Instant;
 import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.ase.userservice.model.Notification;
 import com.ase.userservice.repository.NotificationRepository;
 
