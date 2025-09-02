@@ -32,9 +32,11 @@ public class NotificationService {
    */
   @Transactional
   public boolean markAsUnread(Long id) {
-    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    Optional<Notification> notificationOpt
+        = notificationRepository.findById(id);
     if (notificationOpt.isPresent()) {
-      Notification notification = notificationOpt.get();
+      Notification notification
+          = notificationOpt.get();
       notification.setReadAt(null);
       notificationRepository.save(notification);
       return true;
@@ -43,14 +45,16 @@ public class NotificationService {
   }
 
   /**
-   * Marks a notification as read by setting its readAt timestamp to the current time.
+   * Marks a notification as read
+   * by setting its readAt timestamp to the current time.
    *
    * @param id
    * @return true if the notification was found and updated, false otherwise
    */
   @Transactional
   public boolean markAsRead(Long id) {
-    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    Optional<Notification> notificationOpt
+        = notificationRepository.findById(id);
     if (notificationOpt.isPresent()) {
       Notification notification = notificationOpt.get();
       notification.setReadAt(Instant.now());
@@ -68,7 +72,8 @@ public class NotificationService {
    */
   @Transactional
   public Optional<Notification> getAndMarkAsRead(Long id) {
-    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    Optional<Notification> notificationOpt
+        = notificationRepository.findById(id);
     notificationOpt.ifPresent(notification -> {
       notification.setReadAt(Instant.now());
       notificationRepository.save(notification);

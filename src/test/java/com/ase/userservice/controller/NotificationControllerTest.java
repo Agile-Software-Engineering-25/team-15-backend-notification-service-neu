@@ -6,9 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.time.Instant;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import com.ase.userservice.model.Notification;
 import com.ase.userservice.repository.NotificationRepository;
 
@@ -26,6 +23,8 @@ import com.ase.userservice.repository.NotificationRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 class NotificationControllerTest {
+  private static final int RECENT_SECONDS = 5;
+  private static final long NON_EXISTENT_ID = 99999L;
 
   @Autowired
   private MockMvc mockMvc;
@@ -52,7 +51,7 @@ class NotificationControllerTest {
    * Tests that getting a notification also marks it as read.
    */
   @Test
-  void getAndMarkAsRead_shouldReturnNotificationAndSetReadAt() throws Exception {
+  void getAndMarkAsReadshouldReturnNotificationAndSetReadAt() throws Exception {
     mockMvc.perform(get("/api/notifications")
         .header("Authorization", "mock-token")
         .header("X-Notification-Id", notification.getId())
@@ -66,14 +65,14 @@ class NotificationControllerTest {
         .orElseThrow();
     assertThat(updated.getReadAt()).isNotNull();
     assertThat(updated.getReadAt())
-        .isAfterOrEqualTo(Instant.now().minusSeconds(5));
+        .isAfterOrEqualTo(Instant.now().minusSeconds(RECENT_SECONDS));
   }
 
   /**
    * Tests that getting a notification without auth header returns 401.
    */
   @Test
-  void getAndMarkAsRead_shouldReturn401IfNoAuthHeader() throws Exception {
+  void getAndMarkAsReadshouldReturn401IfNoAuthHeader() throws Exception {
     mockMvc.perform(get("/api/notifications")
         .header("X-Notification-Id", notification.getId()))
         .andExpect(status().isUnauthorized());
@@ -83,10 +82,10 @@ class NotificationControllerTest {
    * Tests that getting a non-existent notification returns 404.
    */
   @Test
-  void getAndMarkAsRead_shouldReturn404IfNotFound() throws Exception {
+  void getAndMarkAsReadshouldReturn404IfNotFound() throws Exception {
     mockMvc.perform(get("/api/notifications")
-        .header("Authorization", "mock-token")
-        .header("X-Notification-Id", 99999L))
+    .header("Authorization", "mock-token")
+    .header("X-Notification-Id", NON_EXISTENT_ID))
         .andExpect(status().isNotFound());
   }
 
@@ -94,7 +93,7 @@ class NotificationControllerTest {
    * Tests that marking a notification as read sets the readAt timestamp.
    */
   @Test
-  void markAsRead_shouldSetReadAt() throws Exception {
+  void markAsReadshouldSetReadAt() throws Exception {
     mockMvc.perform(post("/api/notifications/mark-as-read")
         .header("Authorization", "mock-token")
         .header("X-Notification-Id", notification.getId())
@@ -107,14 +106,14 @@ class NotificationControllerTest {
         .orElseThrow();
     assertThat(updated.getReadAt()).isNotNull();
     assertThat(updated.getReadAt())
-        .isAfterOrEqualTo(Instant.now().minusSeconds(5));
+        .isAfterOrEqualTo(Instant.now().minusSeconds(RECENT_SECONDS));
   }
 
   /**
    * Tests that marking a notification as unread clears the readAt timestamp.
    */
   @Test
-  void markAsUnread_shouldSetReadAtNull() throws Exception {
+  void markAsUnreadShouldSetReadAtNull() throws Exception {
     notification.setReadAt(Instant.now());
     notificationRepository.save(notification);
 
@@ -129,5 +128,5 @@ class NotificationControllerTest {
         .findById(notification.getId())
         .orElseThrow();
     assertThat(updated.getReadAt()).isNull();
-    }
+  }
 }

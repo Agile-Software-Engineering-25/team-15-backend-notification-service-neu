@@ -1,5 +1,6 @@
 
 package com.ase.userservice.config;
+
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,7 +35,7 @@ public class SecurityConfig {
     )
         .addFilterBefore(
           new PlaceholderTokenFilter(),
-          UsernamePasswordAuthenticationFilter.class
+        UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
   }
