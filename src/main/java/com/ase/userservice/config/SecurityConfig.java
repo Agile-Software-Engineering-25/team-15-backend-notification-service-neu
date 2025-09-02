@@ -21,11 +21,11 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     String[] swaggerPaths = {
-      "/swagger-ui/**",
-      "/swagger-ui.html",
-      "/v3/api-docs",
-      "/v3/api-docs.yaml",
-      "/v3/api-docs/**"
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs",
+        "/v3/api-docs.yaml",
+        "/v3/api-docs/**"
     };
 
     http

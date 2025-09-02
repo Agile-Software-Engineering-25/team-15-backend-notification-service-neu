@@ -20,7 +20,7 @@ public class NotificationService {
   /**
    * Creates a new NotificationService with the given repository.
    *
-   * @param notificationRepository the repository to use for notification operations
+   * @param notificationRepository
    */
   public NotificationService(NotificationRepository notificationRepository) {
     this.notificationRepository = notificationRepository;
@@ -47,7 +47,7 @@ public class NotificationService {
   /**
    * Marks a notification as read by setting its readAt timestamp to the current time.
    *
-   * @param id the ID of the notification to mark as read
+   * @param id
    * @return true if the notification was found and updated, false otherwise
    */
   @Transactional

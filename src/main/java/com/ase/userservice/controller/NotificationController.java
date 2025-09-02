@@ -2,6 +2,7 @@ package com.ase.userservice.controller;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,7 +75,7 @@ public class NotificationController {
     if (success) {
       return ResponseEntity.ok("Notification marked as unread");
     }
-    return ResponseEntity.status(404).body("Notification not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
   }
 
   @Operation(
@@ -113,7 +114,7 @@ public class NotificationController {
     if (success) {
       return ResponseEntity.ok("Notification marked as read");
     }
-    return ResponseEntity.status(404).body("Notification not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
   }
 
   @Operation(
@@ -155,11 +156,13 @@ public class NotificationController {
       @Parameter(description = "Authorization token", example = "Bearer mock-token")
       @RequestHeader(value = "Authorization", required = false) String authorization) {
     if (authorization == null || authorization.isEmpty()) {
-      return ResponseEntity.status(401).body("Authorization header required (Mock-Auth)");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body("Authorization header required (Mock-Auth)");
     }
     Optional<Notification> notification = notificationService.getAndMarkAsRead(id);
     return notification
         .<ResponseEntity<?>>map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.status(404).body("Notification not found"));
+        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body("Notification not found"));
   }
-  }
+}
