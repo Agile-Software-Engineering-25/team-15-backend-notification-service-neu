@@ -34,7 +34,7 @@ public class SecurityConfig {
     )
         .addFilterBefore(
           new PlaceholderTokenFilter(),
-        UsernamePasswordAuthenticationFilter.class
+          UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
   }
