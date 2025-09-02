@@ -1,12 +1,10 @@
+
 package com.ase.userservice.config;
-
 import java.io.IOException;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -29,15 +27,15 @@ public class SecurityConfig {
     };
 
     http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
+      .csrf(csrf -> csrf.disable())
+      .authorizeHttpRequests(auth -> auth
         .requestMatchers(swaggerPaths).permitAll()
         .anyRequest().permitAll()
-        )
-        .addFilterBefore(
-            new PlaceholderTokenFilter(),
-            UsernamePasswordAuthenticationFilter.class
-        );
+      )
+      .addFilterBefore(
+        new PlaceholderTokenFilter(),
+        UsernamePasswordAuthenticationFilter.class
+      );
     return http.build();
   }
 
@@ -62,8 +60,9 @@ public class SecurityConfig {
       String token = request.getHeader("Authorization");
       if (token == null || token.isEmpty()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        String message = "Missing or empty Authorization header (token required)";
-        response.getWriter().write(message);
+        response.getWriter().write(
+          "Missing or empty Authorization header (token required)"
+        );
         return;
       }
 
