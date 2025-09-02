@@ -27,13 +27,13 @@ public class SecurityConfig {
     };
 
     http
-         .csrf(csrf -> csrf.disable())
-         .authorizeHttpRequests(auth -> auth
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
         .requestMatchers(swaggerPaths).permitAll()
         .anyRequest().permitAll()
     )
         .addFilterBefore(
-           new PlaceholderTokenFilter(),
+          new PlaceholderTokenFilter(),
           UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
