@@ -11,42 +11,42 @@ import java.util.Optional;
 @Service
 public class NotificationService {
 
-    private final NotificationRepository notificationRepository;
+  private final NotificationRepository notificationRepository;
 
-    public NotificationService(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
-    }
+  public NotificationService(NotificationRepository notificationRepository) {
+    this.notificationRepository = notificationRepository;
+  }
 
-    @Transactional
-    public boolean markAsUnread(Long id) {
-        Optional<Notification> notificationOpt = notificationRepository.findById(id);
-        if (notificationOpt.isPresent()) {
-            Notification notification = notificationOpt.get();
-            notification.setReadAt(null);
-            notificationRepository.save(notification);
-            return true;
-        }
-        return false;
+  @Transactional
+  public boolean markAsUnread(Long id) {
+    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    if (notificationOpt.isPresent()) {
+      Notification notification = notificationOpt.get();
+      notification.setReadAt(null);
+      notificationRepository.save(notification);
+      return true;
     }
+    return false;
+  }
 
-    @Transactional
-    public boolean markAsRead(Long id) {
-        Optional<Notification> notificationOpt = notificationRepository.findById(id);
-        if (notificationOpt.isPresent()) {
-            Notification notification = notificationOpt.get();
-            notification.setReadAt(Instant.now());
-            notificationRepository.save(notification);
-            return true;
-        }
-        return false;
+  @Transactional
+  public boolean markAsRead(Long id) {
+    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    if (notificationOpt.isPresent()) {
+      Notification notification = notificationOpt.get();
+      notification.setReadAt(Instant.now());
+      notificationRepository.save(notification);
+      return true;
     }
-    @Transactional
-    public Optional<Notification> getAndMarkAsRead(Long id) {
-        Optional<Notification> notificationOpt = notificationRepository.findById(id);
-        notificationOpt.ifPresent(notification -> {
-            notification.setReadAt(Instant.now());
-            notificationRepository.save(notification);
-        });
-        return notificationOpt;
-    }
+    return false;
+  }
+  @Transactional
+  public Optional<Notification> getAndMarkAsRead(Long id) {
+    Optional<Notification> notificationOpt = notificationRepository.findById(id);
+    notificationOpt.ifPresent(notification -> {
+      notification.setReadAt(Instant.now());
+      notificationRepository.save(notification);
+    });
+    return notificationOpt;
+  }
 }

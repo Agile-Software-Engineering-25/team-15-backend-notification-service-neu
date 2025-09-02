@@ -11,23 +11,23 @@ import java.time.Instant;
 @Entity
 @Table(name = "notification")
 public class Notification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
+  private Long id;
 
-    @Column
-    private String message;
+  @Column
+  private String message;
 
-    @Column
-    private Instant readAt;
+  @Column
+  private Instant readAt;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
+  public String getMessage() { return message; }
+  public void setMessage(String message) { this.message = message; }
 
-    public Instant getReadAt() { return readAt; }
-    public void setReadAt(Instant readAt) { this.readAt = readAt; }
+  public Instant getReadAt() { return readAt; }
+  public void setReadAt(Instant readAt) { this.readAt = readAt; }
 }
