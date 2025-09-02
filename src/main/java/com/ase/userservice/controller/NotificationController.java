@@ -1,7 +1,6 @@
 package com.ase.userservice.controller;
 
 import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ase.userservice.model.Notification;
 import com.ase.userservice.service.NotificationService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,8 +38,9 @@ public class NotificationController {
 
   @Operation(
       summary = "Mark notification as unread",
-      description = "Removes the `readAt` timestamp for the given notification. "
-          + "Requires an Authorization header.",
+      description
+      = "Removes the `readAt` timestamp for the given notification. "
+      + "Requires an Authorization header.",
       security = @SecurityRequirement(name = "TokenAuth"),
       responses = {
           @ApiResponse(
@@ -75,13 +73,15 @@ public class NotificationController {
     if (success) {
       return ResponseEntity.ok("Notification marked as unread");
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    .body("Notification not found");
   }
 
   @Operation(
       summary = "Mark notification as read",
-      description = "Sets the `readAt` timestamp to now for the given notification. "
-          + "Requires an Authorization header.",
+      description
+      = "Sets the `readAt` timestamp to now for the given notification. "
+      + "Requires an Authorization header.",
       security = @SecurityRequirement(name = "TokenAuth"),
       responses = {
           @ApiResponse(
@@ -114,13 +114,15 @@ public class NotificationController {
     if (success) {
       return ResponseEntity.ok("Notification marked as read");
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    .body("Notification not found");
   }
 
   @Operation(
       summary = "Get notification and mark as read",
-      description = "Returns all attributes of the notification and marks it as read "
-          + "(sets `readAt` to now). Requires an Authorization header.",
+      description
+      = "Returns all attributes of the notification, and marks it as read "
+      + "(sets `readAt` to now). Requires an Authorization header.",
       security = @SecurityRequirement(name = "TokenAuth"),
       responses = {
           @ApiResponse(
@@ -153,13 +155,17 @@ public class NotificationController {
   public ResponseEntity<?> getAndMarkAsRead(
       @Parameter(description = "Notification ID", example = "1")
       @RequestHeader("X-Notification-Id") Long id,
-      @Parameter(description = "Authorization token", example = "Bearer mock-token")
-      @RequestHeader(value = "Authorization", required = false) String authorization) {
+      @Parameter(description = "Authorization token",
+      example = "Bearer mock-token")
+      @RequestHeader(value = "Authorization",
+      required = false)
+      String authorization) {
     if (authorization == null || authorization.isEmpty()) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body("Authorization header required (Mock-Auth)");
     }
-    Optional<Notification> notification = notificationService.getAndMarkAsRead(id);
+    Optional<Notification> notification
+        = notificationService.getAndMarkAsRead(id);
     return notification
         .<ResponseEntity<?>>map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
