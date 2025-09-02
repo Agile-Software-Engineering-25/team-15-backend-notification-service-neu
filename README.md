@@ -1,6 +1,6 @@
-# UserService
+# Notification Service Backend
 
-UserService is a Spring Boot-based application designed to manage user-related operations. It leverages modern Java (Java 21) and integrates with various Spring Boot modules for web, data, and testing functionalities.
+This is the notification service backend of the ASE-25 project. It is designed to be used by all other services to notify users about important events and updates.
 
 ## Features
 
@@ -23,23 +23,33 @@ UserService is a Spring Boot-based application designed to manage user-related o
 git clone https://github.com/your-repo/userservice.git
 cd userservice
 ```
+
 ### Build the Project
+
 ```bash
 mvn clean install
 ```
+
 ### Run the Application
+
 ```bash
 mvn spring-boot:run
 ```
+
 The application will start on http://localhost:8080
 
 ## Testing
+
 ### Unit Tests
+
 Run unit tests using Maven:
+
 ```bash
 mvn test
 ```
+
 ### System Tests
+
 Here information will follow, but system tests will be run on a central server and reports will be made.
 
 ## Code Style & Linting
@@ -47,6 +57,7 @@ Here information will follow, but system tests will be run on a central server a
 This project uses Checkstyle (CLI jar) and EditorConfig to enforce a consistent Java code style.
 
 - How to run locally:
+
   - Using the bundled/dl jar:
     - Windows PowerShell:
       ```powershell
@@ -62,6 +73,7 @@ This project uses Checkstyle (CLI jar) and EditorConfig to enforce a consistent 
       ```
 
 - IDE auto-formatting:
+
   - `.editorconfig` sets 2‑space indentation for `*.java` and YAML, trims trailing whitespace, and enforces final newline.
   - IntelliJ import layout is aligned with our import groups.
 
@@ -95,6 +107,7 @@ Adjust rules in `checkstyle.xml`; IDE basics are in `.editorconfig`.
 We run Checkstyle in CI on every push and on PRs to `main`.
 
 - Workflow: `.github/workflows/checkstyle.yml`
+
   - Sets up Temurin JDK 21
   - Uses `checkstyle-11.0.0-all.jar` (downloaded if not in repo) or `checkstyle.jar` if present
   - Runs Checkstyle against `src/main/java` and `src/test/java`
@@ -106,7 +119,9 @@ We run Checkstyle in CI on every push and on PRs to `main`.
   - Select the “Checkstyle” job as a required status check
 
 ## Dependencies
+
 The project uses the following key dependencies:
+
 - `spring-boot-starter-web`: For building web applications, including RESTful services.
 - `spring-boot-starter-data-jpa`: For integrating with JPA and databases.
 - `spring-boot-starter-test`: For testing support, including JUnit 5.
