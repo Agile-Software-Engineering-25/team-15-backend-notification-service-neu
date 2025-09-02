@@ -34,7 +34,7 @@ public class SecurityConfig {
     )
         .addFilterBefore(
           new PlaceholderTokenFilter(),
-          UsernamePasswordAuthenticationFilter.class
+        UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
   }
@@ -61,7 +61,7 @@ public class SecurityConfig {
       if (token == null || token.isEmpty()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(
-           "Missing or empty Authorization header (token required)"
+            "Missing or empty Authorization header (token required)"
         );
         return;
       }
