@@ -27,14 +27,14 @@ public class SecurityConfig {
     };
 
     http
-       .csrf(csrf -> csrf.disable())
-       .authorizeHttpRequests(auth -> auth
+         .csrf(csrf -> csrf.disable())
+         .authorizeHttpRequests(auth -> auth
         .requestMatchers(swaggerPaths).permitAll()
         .anyRequest().permitAll()
-   )
+    )
         .addFilterBefore(
-        new PlaceholderTokenFilter(),
-         UsernamePasswordAuthenticationFilter.class
+           new PlaceholderTokenFilter(),
+          UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
   }
@@ -61,7 +61,7 @@ public class SecurityConfig {
       if (token == null || token.isEmpty()) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(
-        "Missing or empty Authorization header (token required)"
+           "Missing or empty Authorization header (token required)"
         );
         return;
       }
