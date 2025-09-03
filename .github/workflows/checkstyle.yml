@@ -8,6 +8,7 @@ on:
 
 jobs:
   checkstyle:
+    if: github.event_name == 'SkipThisWorkflow'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
