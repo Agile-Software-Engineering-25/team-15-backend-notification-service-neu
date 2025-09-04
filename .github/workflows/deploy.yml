@@ -2,7 +2,8 @@ name: Checkstyle
 
 on:
   push:
-    branches: ['main']
+#    branches: ['main']
+    branches: ['**']
 
 jobs:
   checkstyle:
