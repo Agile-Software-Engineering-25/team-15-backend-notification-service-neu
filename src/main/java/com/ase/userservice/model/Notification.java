@@ -69,7 +69,6 @@ public class Notification {
     * @param readAt the read timestamp to set, or null to mark as unread
 
    */
-  @Column
+  @Column(name = "read_at")
   private Instant readAt;
-
 }

@@ -91,6 +91,7 @@ public class NotificationService {
     return notificationOpt;
   }
 
+  @Transactional
   public Notification createNotification(Notification notification) {
     return notificationRepository.save(notification);
   }
