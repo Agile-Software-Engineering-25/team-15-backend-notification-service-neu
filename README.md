@@ -68,9 +68,15 @@ This project uses Checkstyle (CLI jar) and EditorConfig to enforce a consistent 
       java -jar checkstyle-11.0.0-all.jar -c checkstyle.xml -f xml -o target\checkstyle-report.xml src\main\java src\test\java
       ```
     - Plain, human‑readable output:
-      ```powershell
-      java -jar checkstyle.jar -c checkstyle.xml -f plain src\main\java src\test\java
-      ```
+
+      - On Unix machines:
+        ```powershell
+        java -jar checkstyle.jar -c checkstyle.xml -f plain src\main\java src\test\java
+        ```
+      - On Windows machines:
+        ```bash
+        java -jar checkstyle-11.0.0-all.jar -c checkstyle.xml -f plain src/main/java src/test/java
+        ```
 
 - IDE auto-formatting:
 
