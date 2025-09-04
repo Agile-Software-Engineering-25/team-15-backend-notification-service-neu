@@ -1,17 +1,17 @@
 
-package com.ase.userservice.service;
+package com.ase.notificationService.service;
 import java.time.Instant;
 import java.util.Optional;
-import com.ase.userservice.DummyData;
-import com.ase.userservice.config.RepositoryConfig;
+import com.ase.notificationService.DummyData;
+import com.ase.notificationService.config.RepositoryConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.ase.userservice.model.Notification;
-import com.ase.userservice.repository.NotificationRepository;
+import com.ase.notificationService.model.Notification;
+import com.ase.notificationService.repository.NotificationRepository;
 
 /**
  * Service class for managing notification operations.

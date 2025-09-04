@@ -1,4 +1,4 @@
-package com.ase.userservice.config;
+package com.ase.notificationService.config;
 
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
