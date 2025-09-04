@@ -1,0 +1,18 @@
+name: Checkstyle
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Build and push image
+        uses: Agile-Software-Engineering-25/build-and-publish-image@v1
+        with:
+          image_name: "team-15-backend-notification-service"
+          push: true
