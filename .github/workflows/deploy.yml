@@ -17,6 +17,7 @@ jobs:
         with:
           image_name: "team-15-backend-notification-service"
           push: true
+          tags: latest
 
       - name: Deploy to k8s
         uses: Agile-Software-Engineering-25/deploy-to-k8s@v1
