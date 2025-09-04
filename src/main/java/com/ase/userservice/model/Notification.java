@@ -7,15 +7,33 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Entity class representing a notification in the system.
  */
+@Setter
+@Getter
 @Entity
 @Table(name = "notification")
+@NoArgsConstructor
+@SuperBuilder
 public class Notification {
   /**
    * The unique identifier for the notification.
+   * -- GETTER --
+   *  Gets the notification's ID.
+   *
+   *
+   * -- SETTER --
+   *  Sets the notification's ID.
+   *
+   @return the ID
+    * @param id the ID to set
+
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,67 +42,34 @@ public class Notification {
 
   /**
    * The content of the notification message.
+   * -- GETTER --
+   *  Gets the notification message.
+   *
+   *
+   * -- SETTER --
+   *  Sets the notification message.
+   *
+   @return the message
+    * @param message the message to set
+
    */
   @Column
   private String message;
 
   /**
    * The timestamp when the notification was read, or null if unread.
+   * -- GETTER --
+   *  Gets the timestamp when the notification was read.
+   *
+   *
+   * -- SETTER --
+   *  Sets the timestamp when the notification was read.
+   *
+   @return the read timestamp, or null if unread
+    * @param readAt the read timestamp to set, or null to mark as unread
+
    */
   @Column
   private Instant readAt;
 
-  /**
-   * Gets the notification's ID.
-   *
-   * @return the ID
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * Sets the notification's ID.
-   *
-   * @param id the ID to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * Gets the notification message.
-   *
-   * @return the message
-   */
-  public String getMessage() {
-    return message;
-  }
-
-  /**
-   * Sets the notification message.
-   *
-   * @param message the message to set
-   */
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  /**
-   * Gets the timestamp when the notification was read.
-   *
-   * @return the read timestamp, or null if unread
-   */
-  public Instant getReadAt() {
-    return readAt;
-  }
-
-  /**
-   * Sets the timestamp when the notification was read.
-   *
-   * @param readAt the read timestamp to set, or null to mark as unread
-   */
-  public void setReadAt(Instant readAt) {
-    this.readAt = readAt;
-  }
 }

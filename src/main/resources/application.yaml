@@ -5,15 +5,18 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:h2:file:./data/mydb
+    url: jdbc:h2:mem:./data/mydb
     driverClassName: org.h2.Driver
     username: sa
     password: password
 server:
   error:
     include-message: always
+app:
+  repository:
+    initialize-with-dummy-data: true
