@@ -9,11 +9,10 @@ resources:
   - service.yaml
   - ingress.yaml
 
-labels:
-  - pairs:
-      environment: ase-15
-      managed-by: kustomize
-      app: notification-service
+commonLabels:
+  environment: ase-15
+  managed-by: kustomize
+  app: notification-service
 
 namePrefix: "ase-"
 
