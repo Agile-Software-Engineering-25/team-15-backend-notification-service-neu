@@ -41,3 +41,8 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
+            - name: NOTIFICATION_SERVICE_BASE_PATH
+              valueFrom:
+                  configMapKeyRef:
+                    name: notification-service-config
+                    key: NOTIFICATION_SERVICE_BASE_PATH
