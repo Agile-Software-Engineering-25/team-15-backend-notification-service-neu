@@ -71,4 +71,73 @@ public class Notification {
    */
   @Column(name = "read_at")
   private Instant readAt;
+
+    /**
+   * The priority of the notification 
+   * -- GETTER --
+   *  Gets the priority of the notification.
+   *
+   *
+   * -- SETTER --
+   *  Sets the priority of the notification.
+   *
+   @return the priority of the notification.
+    * @param priority the priority to set
+
+   */
+  @Column
+  private int priority; 
+
+  /**
+   * The timestamp when the notification was recived.
+   * -- GETTER --
+   *  Gets the timestamp when the notification was recived.
+   *
+   *
+   * -- SETTER --
+   *  Sets the timestamp when the notification was recived.
+   *
+   @return the recived timestamp, or null if 
+    * @param recivedAt the read timestamp to set, or null to mark as unread
+
+   */
+  @Column(name = "recived_at")
+  private Instant recivedAt;
+
+
+    /**
+   * The title of the notification 
+   * -- GETTER --
+   *  Gets the title of the notification.
+   *
+   *
+   * -- SETTER --
+   *  Sets the title of the notification.
+   *
+   @return the title of the notification.
+    * @param title the title to set
+
+   */
+  @Column
+  private String title;
+
+
+  /**
+   * The description of the notification 
+   * -- GETTER --
+   *  Gets the description of the notification.
+   *
+   *
+   * -- SETTER --
+   *  Sets  the description of the notification.
+   *
+   @return the description of the notification.
+    * @param description the description to set
+
+   */
+  @Column
+  private String description;
+
 }
+
+
