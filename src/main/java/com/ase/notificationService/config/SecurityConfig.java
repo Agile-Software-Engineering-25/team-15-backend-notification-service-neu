@@ -52,7 +52,7 @@ public class SecurityConfig {
       String path = request.getRequestURI();
 
       // Allow Swagger/OpenAPI paths without authentication
-      if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+      if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/")) {
         filterChain.doFilter(request, response);
         return;
       }
