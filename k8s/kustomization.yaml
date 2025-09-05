@@ -21,3 +21,8 @@ namespace: ase-15
 replicas:
   - name: notification-service
     count: 2
+
+configMapGenerator:
+  - name: notification-service-config
+    literals:
+      - notification-service-base-path=/ase-15/notification-service
