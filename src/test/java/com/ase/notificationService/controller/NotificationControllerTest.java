@@ -1,4 +1,4 @@
-package com.ase.userservice.controller;
+package com.ase.notificationService.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.userservice.model.Notification;
-import com.ase.userservice.repository.NotificationRepository;
+import com.ase.notificationService.model.Notification;
+import com.ase.notificationService.repository.NotificationRepository;
 
 /**
  * Integration tests for the NotificationController.

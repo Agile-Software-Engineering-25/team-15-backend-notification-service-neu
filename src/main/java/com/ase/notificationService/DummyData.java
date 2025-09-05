@@ -1,6 +1,6 @@
-package com.ase.userservice;
+package com.ase.notificationService;
 
-import com.ase.userservice.model.Notification;
+import com.ase.notificationService.model.Notification;
 import java.util.List;
 
 public class DummyData {

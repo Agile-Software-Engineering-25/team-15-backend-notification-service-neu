@@ -1,4 +1,4 @@
-package com.ase.userservice;
+package com.ase.notificationService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.ase.userservice.config;
+package com.ase.notificationService.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
