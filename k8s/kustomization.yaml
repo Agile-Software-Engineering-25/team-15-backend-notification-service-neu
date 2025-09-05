@@ -25,4 +25,4 @@ replicas:
 configMapGenerator:
   - name: notification-service-config
     literals:
-      - notification-service-base-path=/ase-15/notification-service
+      - NOTIFICATION_BASE_PATH=/ase-15/notification-service
