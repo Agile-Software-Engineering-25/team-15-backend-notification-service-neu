@@ -22,7 +22,3 @@ replicas:
   - name: notification-service
     count: 2
 
-configMapGenerator:
-  - name: notification-service-config
-    literals:
-      - NOTIFICATION_SERVICE_BASE_PATH=/ase-15/notification-service

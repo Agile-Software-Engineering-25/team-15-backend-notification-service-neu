@@ -28,21 +28,16 @@ spec:
               cpu: "300m"
           readinessProbe:
             httpGet:
-              path: $(NOTIFICATION_SERVICE_BASE_PATH)
+              path: /ase-15/notification-service
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: $(NOTIFICATION_SERVICE_BASE_PATH)
+              path: /ase-15/notification-service
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 20
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-            - name: NOTIFICATION_SERVICE_BASE_PATH
-              valueFrom:
-                  configMapKeyRef:
-                    name: notification-service-config
-                    key: NOTIFICATION_SERVICE_BASE_PATH
