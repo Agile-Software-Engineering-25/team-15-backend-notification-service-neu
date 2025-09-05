@@ -73,7 +73,7 @@ public class Notification {
   private Instant readAt;
 
     /**
-   * The priority of the notification 
+   * The priority of the notification
    * -- GETTER --
    *  Gets the priority of the notification.
    *
@@ -86,7 +86,7 @@ public class Notification {
 
    */
   @Column
-  private int priority; 
+  private int priority;
 
   /**
    * The timestamp when the notification was recived.
@@ -97,16 +97,16 @@ public class Notification {
    * -- SETTER --
    *  Sets the timestamp when the notification was recived.
    *
-   @return the recived timestamp, or null if 
-    * @param recivedAt the read timestamp to set, or null to mark as unread
+   @return the received timestamp, or null if
+    * @param receivedAt the read timestamp to set, or null to mark as unread
 
    */
-  @Column(name = "recived_at")
-  private Instant recivedAt;
+  @Column(name = "received_at")
+  private Instant receivedAt;
 
 
     /**
-   * The title of the notification 
+   * The title of the notification
    * -- GETTER --
    *  Gets the title of the notification.
    *
@@ -123,7 +123,7 @@ public class Notification {
 
 
   /**
-   * The description of the notification 
+   * The description of the notification
    * -- GETTER --
    *  Gets the description of the notification.
    *
