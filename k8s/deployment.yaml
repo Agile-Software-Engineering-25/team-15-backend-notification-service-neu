@@ -28,13 +28,13 @@ spec:
               cpu: "300m"
           readinessProbe:
             httpGet:
-              path: ${NOTIFICATION_SERVICE_BASE_PATH}
+              path: $(NOTIFICATION_SERVICE_BASE_PATH)
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: ${NOTIFICATION_SERVICE_BASE_PATH}
+              path: $(NOTIFICATION_SERVICE_BASE_PATH)
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 20

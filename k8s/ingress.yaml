@@ -12,7 +12,7 @@ spec:
     - host: sau-portal.de
       http:
         paths:
-          - path: ${NOTIFICATION_SERVICE_BASE_PATH}
+          - path: $(NOTIFICATION_SERVICE_BASE_PATH)
             pathType: Prefix
             backend:
               service:
