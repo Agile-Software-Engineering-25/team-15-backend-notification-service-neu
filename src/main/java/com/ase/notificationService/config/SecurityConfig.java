@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -14,7 +16,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
+@Slf4j
 public class SecurityConfig {
+
+  @Value("${server.servlet.context-path}")
+  private  String basePath;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,7 +39,7 @@ public class SecurityConfig {
         .anyRequest().permitAll()
     )
         .addFilterBefore(
-          new PlaceholderTokenFilter(),
+          new PlaceholderTokenFilter(this.basePath),
           UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
@@ -43,16 +49,23 @@ public class SecurityConfig {
    * Placeholder filter for token validation.
    */
   static class PlaceholderTokenFilter extends OncePerRequestFilter {
+    private final String basePath;
+
+    PlaceholderTokenFilter(String basePath) {
+      this.basePath = basePath;
+    }
+
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-      String path = request.getRequestURI();
+      // remove  prefix from the path
+      String path = request.getRequestURI().substring(basePath.length());
 
       // Allow Swagger/OpenAPI paths without authentication
-      if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/")) {
+      if (path.startsWith("/swagger-ui") || path.startsWith("/v1/api-docs") || path.equals("/")) {
         filterChain.doFilter(request, response);
         return;
       }

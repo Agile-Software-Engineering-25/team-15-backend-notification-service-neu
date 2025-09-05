@@ -1,0 +1,3 @@
+server:
+  servlet:
+    context-path: /ase-15/notification-service

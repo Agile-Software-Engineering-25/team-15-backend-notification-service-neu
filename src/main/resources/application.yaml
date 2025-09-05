@@ -9,6 +9,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  h2:
+    console:
+      enabled: true
   datasource:
     url: jdbc:h2:mem:./data/mydb
     driverClassName: org.h2.Driver
@@ -17,6 +20,13 @@ spring:
 server:
   error:
     include-message: always
+  servlet:
+    context-path: /
 app:
   repository:
     initialize-with-dummy-data: true
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui
