@@ -65,9 +65,16 @@ public class SecurityConfig {
     ) throws ServletException, IOException {
       // remove  prefix from the path
       String path = request.getRequestURI().substring(basePath.length());
+      // depending on whether default or prod profile is used, the path may
+      // or may not start with / (the "root /" is ignored apparently)
+      if (path.startsWith("/")) {
+        path = path.substring(1);
+      }
+
+      log.info("Request path: {}", path);
 
       // Allow Swagger/OpenAPI paths without authentication
-      if (path.startsWith("/swagger-ui") || path.startsWith("/v1/api-docs") || path.equals("/")) {
+      if (path.startsWith("swagger-ui") || path.startsWith("v1/api-docs") || path.isEmpty()) {
         filterChain.doFilter(request, response);
         return;
       }
