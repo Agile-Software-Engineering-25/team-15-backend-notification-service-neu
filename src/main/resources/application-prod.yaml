@@ -8,7 +8,7 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:postgresql://ase-15:${POSTGRES_PASSWORD}@postgres.db:5432/appdb
+    url: jdbc:postgresql://postgres.db:5432/appdb
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
