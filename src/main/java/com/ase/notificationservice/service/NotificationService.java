@@ -1,17 +1,17 @@
+package com.ase.notificationservice.service;
 
-package com.ase.notificationService.service;
 import java.time.Instant;
 import java.util.Optional;
-import com.ase.notificationService.DummyData;
-import com.ase.notificationService.config.RepositoryConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.ase.notificationService.model.Notification;
-import com.ase.notificationService.repository.NotificationRepository;
+import com.ase.notificationservice.DummyData;
+import com.ase.notificationservice.config.RepositoryConfig;
+import com.ase.notificationservice.model.Notification;
+import com.ase.notificationservice.repository.NotificationRepository;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service class for managing notification operations.
@@ -27,9 +27,12 @@ public class NotificationService {
   /**
    * Creates a new NotificationService with the given repository.
    *
-   * @param notificationRepository
+   * @param notificationRepository the notification repository
    */
-  public NotificationService(NotificationRepository notificationRepository, RepositoryConfig repositoryConfig) {
+  public NotificationService(
+      NotificationRepository notificationRepository,
+      RepositoryConfig repositoryConfig
+  ) {
     this.notificationRepository = notificationRepository;
     this.repositoryConfig = repositoryConfig;
   }

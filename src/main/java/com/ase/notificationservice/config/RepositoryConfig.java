@@ -1,7 +1,8 @@
-package com.ase.notificationService.config;
+package com.ase.notificationservice.config;
 
-import lombok.Data;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Data;
 
 @Data
 @ConfigurationProperties(prefix = "app.repository")

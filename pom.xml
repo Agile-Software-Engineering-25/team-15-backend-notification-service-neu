@@ -89,7 +89,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>com.ase.notificationService.Application</mainClass>
+                            <mainClass>com.ase.notificationservice.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

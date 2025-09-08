@@ -1,4 +1,4 @@
-package com.ase.notificationService.model;
+package com.ase.notificationservice.model;
 
 import java.time.Instant;
 import jakarta.persistence.Column;
