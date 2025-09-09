@@ -1,6 +1,8 @@
 package com.ase.notificationservice.config;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,18 +64,11 @@ public class SecurityConfig {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-      // remove  prefix from the path
-      String path = request.getRequestURI().substring(basePath.length());
-      // depending on whether default or prod profile is used, the path may
-      // or may not start with / (the "root /" is ignored apparently)
-      if (path.startsWith("/")) {
-        path = path.substring(1);
-      }
 
-      log.info("Request path: {}", path);
+      String path = request.getServletPath();
 
       // Allow Swagger/OpenAPI paths without authentication
-      if (path.startsWith("swagger-ui") || path.startsWith("v1/api-docs") || path.isEmpty()) {
+      if (path.startsWith("/swagger-ui") || path.startsWith("/v1/api-docs") || path.equals("/")) {
         filterChain.doFilter(request, response);
         return;
       }
