@@ -1,4 +1,4 @@
-package com.ase.userservice.controller;
+package com.ase.notificationservice.controller;
 
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ase.userservice.model.Notification;
-import com.ase.userservice.service.NotificationService;
+import com.ase.notificationservice.model.Notification;
+import com.ase.notificationservice.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

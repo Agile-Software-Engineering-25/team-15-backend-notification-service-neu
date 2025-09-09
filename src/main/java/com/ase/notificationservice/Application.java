@@ -1,4 +1,4 @@
-package com.ase.userservice;
+package com.ase.notificationservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

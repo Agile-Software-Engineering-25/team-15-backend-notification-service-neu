@@ -1,4 +1,4 @@
-package com.ase.userservice.controller;
+package com.ase.notificationservice.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,15 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.userservice.model.Notification;
-import com.ase.userservice.repository.NotificationRepository;
+import com.ase.notificationservice.model.Notification;
+import com.ase.notificationservice.repository.NotificationRepository;
 
 /**
  * Integration tests for the NotificationController.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class NotificationControllerTest {
   private static final int RECENT_SECONDS = 5;
   private static final long NON_EXISTENT_ID = 99999L;
@@ -41,9 +43,7 @@ class NotificationControllerTest {
   @BeforeEach
   void setUp() {
     notificationRepository.deleteAll();
-    notification = new Notification();
-    notification.setMessage("Test-Message");
-    notification.setReadAt(null);
+    notification = Notification.builder().message("Test-Message").readAt(null).build();
     notification = notificationRepository.save(notification);
   }
 
@@ -51,7 +51,7 @@ class NotificationControllerTest {
    * Tests that getting a notification also marks it as read.
    */
   @Test
-  void getAndMarkAsReadshouldReturnNotificationAndSetReadAt() throws Exception {
+  void getAndMarkAsReadShouldReturnNotificationAndSetReadAt() throws Exception {
     mockMvc.perform(get("/api/notifications")
         .header("Authorization", "mock-token")
         .header("X-Notification-Id", notification.getId())
@@ -72,7 +72,7 @@ class NotificationControllerTest {
    * Tests that getting a notification without auth header returns 401.
    */
   @Test
-  void getAndMarkAsReadshouldReturn401IfNoAuthHeader() throws Exception {
+  void getAndMarkAsReadShouldReturn401IfNoAuthHeader() throws Exception {
     mockMvc.perform(get("/api/notifications")
         .header("X-Notification-Id", notification.getId()))
         .andExpect(status().isUnauthorized());
@@ -82,7 +82,7 @@ class NotificationControllerTest {
    * Tests that getting a non-existent notification returns 404.
    */
   @Test
-  void getAndMarkAsReadshouldReturn404IfNotFound() throws Exception {
+  void getAndMarkAsReadShouldReturn404IfNotFound() throws Exception {
     mockMvc.perform(get("/api/notifications")
     .header("Authorization", "mock-token")
     .header("X-Notification-Id", NON_EXISTENT_ID))
@@ -93,7 +93,7 @@ class NotificationControllerTest {
    * Tests that marking a notification as read sets the readAt timestamp.
    */
   @Test
-  void markAsReadshouldSetReadAt() throws Exception {
+  void markAsReadShouldSetReadAt() throws Exception {
     mockMvc.perform(post("/api/notifications/mark-as-read")
         .header("Authorization", "mock-token")
         .header("X-Notification-Id", notification.getId())

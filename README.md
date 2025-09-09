@@ -21,7 +21,7 @@ This is the notification service backend of the ASE-25 project. It is designed t
 
 ```bash
 git clone https://github.com/your-repo/userservice.git
-cd userservice
+cd notificationservice
 ```
 
 ### Build the Project
