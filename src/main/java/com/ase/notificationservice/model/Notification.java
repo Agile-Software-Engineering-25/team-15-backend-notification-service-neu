@@ -28,13 +28,19 @@ public class Notification {
   private Long id;
 
   @Column
+  private String[] groups;
+
+  @Column
+  private String[] users;
+
+  @Column
   private String message;
 
   @Column(name = "read_at")
   private Instant readAt;
 
   @Column
-  private int priority;
+  private boolean priority;
 
   @Column(name = "received_at")
   private Instant receivedAt;
@@ -43,7 +49,7 @@ public class Notification {
   private String title;
 
   @Column
-  private String description;
+  private String shortDescription;
 
 }
 
