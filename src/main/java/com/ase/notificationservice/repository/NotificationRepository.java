@@ -8,5 +8,5 @@ import com.ase.notificationservice.model.Notification;
  * Provides standard JPA CRUD operations for notifications.
  */
 public interface NotificationRepository
-    extends JpaRepository<Notification, Long> {
+    extends JpaRepository<Notification, String> {
 }

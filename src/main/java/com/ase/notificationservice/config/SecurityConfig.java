@@ -38,11 +38,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(swaggerPaths).permitAll()
         .anyRequest().permitAll()
-    )
-        .addFilterBefore(
-          new PlaceholderTokenFilter(this.basePath),
-          UsernamePasswordAuthenticationFilter.class
-        );
+    );
     return http.build();
   }
 
@@ -64,6 +60,7 @@ public class SecurityConfig {
     ) throws ServletException, IOException {
 
       String path = request.getServletPath();
+      log.info(path);
 
       // Allow Swagger/OpenAPI paths without authentication
       if (path.startsWith("/swagger-ui") || path.startsWith("/v1/api-docs") || path.equals("/")) {
