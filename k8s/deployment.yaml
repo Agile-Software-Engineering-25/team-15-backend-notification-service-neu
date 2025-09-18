@@ -17,6 +17,7 @@ spec:
       containers:
         - name: notification-service
           image:  ghcr.io/agile-software-engineering-25/team-15-backend-notification-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:
