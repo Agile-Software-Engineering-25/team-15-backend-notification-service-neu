@@ -2,7 +2,6 @@ package com.ase.notificationservice.service;
 
 import java.time.Instant;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
@@ -12,6 +11,7 @@ import com.ase.notificationservice.DummyData;
 import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.model.Notification;
 import com.ase.notificationservice.repository.NotificationRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
