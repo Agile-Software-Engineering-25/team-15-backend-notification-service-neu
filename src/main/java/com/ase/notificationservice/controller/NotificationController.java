@@ -50,35 +50,6 @@ public class NotificationController {
     return ResponseEntity.ok().body(notification);
   }
 
-  @Operation(
-      summary = "Mark notification as unread",
-      description
-          = "Removes the `readAt` timestamp for the given notification. "
-          + "Requires an Authorization header.",
-      security = @SecurityRequirement(name = "TokenAuth"),
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Notification marked as unread",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Notification marked as unread\""))),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Notification not found",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Notification not found\""))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Authorization header missing",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Authorization header required (Mock-Auth)\"")))
-      })
   @PostMapping("/mark-as-unread")
   public ResponseEntity<?> markAsUnread(
       @Parameter(description = "Notification ID", example = "7c50d311-b813-4cdd-b8f8-34e7df684e18")
@@ -91,35 +62,7 @@ public class NotificationController {
         .body("Notification not found");
   }
 
-  @Operation(
-      summary = "Mark notification as read",
-      description
-          = "Sets the `readAt` timestamp to now for the given notification. "
-          + "Requires an Authorization header.",
-      security = @SecurityRequirement(name = "TokenAuth"),
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Notification marked as read",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Notification marked as read\""))),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Notification not found",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Notification not found\""))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Authorization header missing",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Authorization header required (Mock-Auth)\"")))
-      })
+
   @PostMapping("/mark-as-read")
   public ResponseEntity<?> markAsRead(
       @Parameter(description = "Notification ID", example = "1")
@@ -132,39 +75,6 @@ public class NotificationController {
         .body("Notification not found");
   }
 
-  @Operation(
-      summary = "Get notification and mark as read",
-      description
-          = "Returns all attributes of the notification, and marks it as read "
-          + "(sets `readAt` to now). Requires an Authorization header.",
-      security = @SecurityRequirement(name = "TokenAuth"),
-      responses = {
-          @ApiResponse(
-              responseCode = "200",
-              description = "Notification found and marked as read",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(value = """
-                      {
-                        "id": 1,
-                        "message": "Dies ist eine Beispielbenachrichtigung",
-                        "readAt": "2024-06-27T12:34:56.789Z"
-                      }"""))),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Notification not found",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Notification not found\""))),
-          @ApiResponse(
-              responseCode = "401",
-              description = "Authorization header missing",
-              content = @Content(
-                  mediaType = "application/json",
-                  examples = @ExampleObject(
-                      value = "\"Authorization header required (Mock-Auth)\"")))
-      })
   @GetMapping
   public ResponseEntity<?> getAndMarkAsRead(
       @Parameter(description = "Notification ID", example = "1")
