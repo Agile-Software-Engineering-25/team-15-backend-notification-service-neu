@@ -30,7 +30,7 @@ public class Notification {
   private String id;
 
   @Column
-  private String user_id;
+  private String userId;
 
   @Column
   private String message;
