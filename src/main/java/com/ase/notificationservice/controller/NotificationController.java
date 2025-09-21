@@ -1,5 +1,14 @@
 package com.ase.notificationservice.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,20 +41,37 @@ public class NotificationController {
   private final NotificationService notificationService;
 
   @PostMapping("/notification")
-  public ResponseEntity<Notification> postNotification(
+  public ResponseEntity<List<Notification>> postNotification(
       @RequestBody NotificationRequestDto notificationRequestDto) {
-    log.info("Incoming message: {}", notificationRequestDto);
 
-    Notification notification = notificationService.createNotification(Notification.builder()
-        .message(notificationRequestDto.getMessage())
-        .groups(notificationRequestDto.getGroups())
-        .title(notificationRequestDto.getTitle())
-        .priority(notificationRequestDto.isPriority())
-        .shortDescription(notificationRequestDto.getShortDescription())
-        .users(notificationRequestDto.getUsers())
-        .build());
+    List<Notification> created = new ArrayList<>();
 
-    return ResponseEntity.ok().body(notification);
+    List<String> allUsers = new ArrayList<>();
+    if (notificationRequestDto.getUsers() != null) {
+      allUsers.addAll(Arrays.asList(notificationRequestDto.getUsers()));
+    }
+
+    /* TODO add when API split group is available
+    if (notificationRequestDto.getGroups() != null) {
+      //ADD API REQUEST FOR GROUP SPLITTING
+    }
+    */
+    Instant receivedTimestamp = Instant.now();
+
+    for (String user : allUsers.stream().distinct().toList()) {
+      Notification notification = Notification.builder()
+          .user_id(user)
+          .message(notificationRequestDto.getMessage())
+          .title(notificationRequestDto.getTitle())
+          .priority(notificationRequestDto.isPriority())
+          .shortDescription(notificationRequestDto.getShortDescription())
+          .receivedAt(receivedTimestamp)
+          .build();
+
+      created.add(notificationService.createNotification(notification));
+    }
+
+    return ResponseEntity.ok(created);
   }
 
   @PostMapping("/mark-as-unread")

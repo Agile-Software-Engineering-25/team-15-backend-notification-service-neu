@@ -30,10 +30,7 @@ public class Notification {
   private String id;
 
   @Column
-  private String[] groups;
-
-  @Column
-  private String[] users;
+  private String user_id;
 
   @Column
   private String message;
@@ -52,6 +49,9 @@ public class Notification {
 
   @Column
   private String shortDescription;
+
+  @Column
+  private String notificationType;
 
 }
 
