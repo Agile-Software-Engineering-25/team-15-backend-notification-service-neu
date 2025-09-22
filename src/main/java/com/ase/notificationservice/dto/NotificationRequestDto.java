@@ -3,7 +3,7 @@ package com.ase.notificationservice.dto;
 import lombok.Data;
 
 enum NotificationTypes {
-  Mail,UI,All
+  Mail, UI, All
 }
 @Data
 public class NotificationRequestDto {
