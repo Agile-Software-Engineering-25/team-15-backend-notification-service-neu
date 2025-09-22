@@ -10,4 +10,5 @@ public class NotificationRequestDto {
   private String message;
   private boolean priority;
   private String shortDescription;
+  private String notificationType;
 }

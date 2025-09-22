@@ -51,11 +51,12 @@ public class NotificationController {
 
     for (String user : allUsers.stream().distinct().toList()) {
       Notification notification = Notification.builder()
-          .user_id(user)
+          .userId(user)
           .message(notificationRequestDto.getMessage())
           .title(notificationRequestDto.getTitle())
           .priority(notificationRequestDto.isPriority())
           .shortDescription(notificationRequestDto.getShortDescription())
+          .notificationType(notificationRequestDto.getNotificationType())
           .receivedAt(receivedTimestamp)
           .build();
 
