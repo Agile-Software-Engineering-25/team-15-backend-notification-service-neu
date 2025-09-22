@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -21,17 +22,15 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "notification")
 @NoArgsConstructor
 @SuperBuilder
+@ToString
 public class Notification {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column
-  private Long id;
+  private String id;
 
   @Column
-  private String[] groups;
-
-  @Column
-  private String[] users;
+  private String userId;
 
   @Column
   private String message;
@@ -50,6 +49,9 @@ public class Notification {
 
   @Column
   private String shortDescription;
+
+  @Column
+  private String notificationType;
 
 }
 

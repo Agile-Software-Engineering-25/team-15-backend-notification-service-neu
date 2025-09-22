@@ -1,4 +1,4 @@
-package com.ase.notificationservice.controllers;
+package com.ase.notificationservice.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

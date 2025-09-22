@@ -11,6 +11,7 @@ import com.ase.notificationservice.DummyData;
 import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.model.Notification;
 import com.ase.notificationservice.repository.NotificationRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,23 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @EnableConfigurationProperties(RepositoryConfig.class)
+@RequiredArgsConstructor
 public class NotificationService {
 
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
-
-  /**
-   * Creates a new NotificationService with the given repository.
-   *
-   * @param notificationRepository the notification repository
-   */
-  public NotificationService(
-      NotificationRepository notificationRepository,
-      RepositoryConfig repositoryConfig
-  ) {
-    this.notificationRepository = notificationRepository;
-    this.repositoryConfig = repositoryConfig;
-  }
 
   /**
    * Marks a notification as unread by setting its readAt timestamp to null.
@@ -44,7 +33,7 @@ public class NotificationService {
    * @return true if the notification was found and updated, false otherwise
    */
   @Transactional
-  public boolean markAsUnread(Long id) {
+  public boolean markAsUnread(String id) {
     Optional<Notification> notificationOpt
         = notificationRepository.findById(id);
     if (notificationOpt.isPresent()) {
@@ -65,16 +54,16 @@ public class NotificationService {
    * @return true if the notification was found and updated, false otherwise
    */
   @Transactional
-  public boolean markAsRead(Long id) {
+  public boolean markAsRead(String id) {
     Optional<Notification> notificationOpt
         = notificationRepository.findById(id);
-    if (notificationOpt.isPresent()) {
-      Notification notification = notificationOpt.get();
-      notification.setReadAt(Instant.now());
-      notificationRepository.save(notification);
-      return true;
+    if (notificationOpt.isEmpty()) {
+      return false;
     }
-    return false;
+    Notification notification = notificationOpt.get();
+    notification.setReadAt(Instant.now());
+    notificationRepository.save(notification);
+    return true;
   }
 
   /**
@@ -84,7 +73,7 @@ public class NotificationService {
    * @return an Optional containing the notification if found, empty otherwise
    */
   @Transactional
-  public Optional<Notification> getAndMarkAsRead(Long id) {
+  public Optional<Notification> getAndMarkAsRead(String id) {
     Optional<Notification> notificationOpt
         = notificationRepository.findById(id);
     notificationOpt.ifPresent(notification -> {
@@ -96,6 +85,7 @@ public class NotificationService {
 
   @Transactional
   public Notification createNotification(Notification notification) {
+    log.info("Notification to publish: {}", notification);
     return notificationRepository.save(notification);
   }
 

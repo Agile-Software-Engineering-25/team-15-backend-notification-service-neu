@@ -38,10 +38,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(swaggerPaths).permitAll()
         .anyRequest().permitAll()
-    )
+        )
         .addFilterBefore(
-          new PlaceholderTokenFilter(this.basePath),
-          UsernamePasswordAuthenticationFilter.class
+            new PlaceholderTokenFilter(this.basePath),
+            UsernamePasswordAuthenticationFilter.class
         );
     return http.build();
   }
