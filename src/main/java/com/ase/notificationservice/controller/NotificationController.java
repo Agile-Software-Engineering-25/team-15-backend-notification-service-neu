@@ -66,6 +66,14 @@ public class NotificationController {
     return ResponseEntity.ok(created);
   }
 
+  @GetMapping("/notification")
+  public ResponseEntity<List<Notification>> getNotifications(
+      @RequestHeader("X-User-Id") String userId) {
+    List<Notification> notifications
+        = notificationService.getNotificationsForUser(userId);
+    return ResponseEntity.ok(notifications);
+  }
+
   @PostMapping("/mark-as-unread")
   public ResponseEntity<?> markAsUnread(
       @Parameter(description = "Notification ID", example = "7c50d311-b813-4cdd-b8f8-34e7df684e18")
@@ -88,26 +96,5 @@ public class NotificationController {
     }
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Notification not found");
-  }
-
-  @GetMapping
-  public ResponseEntity<?> getAndMarkAsRead(
-      @Parameter(description = "Notification ID", example = "1")
-      @RequestHeader("X-Notification-Id") String id,
-      @Parameter(description = "Authorization token",
-          example = "Bearer mock-token")
-      @RequestHeader(value = "Authorization",
-          required = false)
-      String authorization) {
-    if (authorization == null || authorization.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body("Authorization header required (Mock-Auth)");
-    }
-    Optional<Notification> notification
-        = notificationService.getAndMarkAsRead(id);
-    return notification
-        .<ResponseEntity<?>>map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body("Notification not found"));
   }
 }

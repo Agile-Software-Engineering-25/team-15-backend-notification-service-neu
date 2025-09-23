@@ -99,4 +99,8 @@ public class NotificationService {
     log.info("Inserting {} dummy notifications", DummyData.NOTIFICATIONS.size());
     DummyData.NOTIFICATIONS.forEach(this::createNotification);
   }
+
+  public java.util.List<Notification> getNotificationsForUser(String userId) {
+    return notificationRepository.findByUserId(userId).subList(0, 5);
+  }
 }
