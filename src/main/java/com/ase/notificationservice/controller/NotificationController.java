@@ -31,7 +31,7 @@ public class NotificationController {
 
   private final NotificationService notificationService;
 
-  @PostMapping("/notification")
+  @PostMapping("/notifications")
   public ResponseEntity<List<Notification>> postNotification(
       @RequestBody NotificationRequestDto notificationRequestDto) {
 
@@ -66,7 +66,7 @@ public class NotificationController {
     return ResponseEntity.ok(created);
   }
 
-  @GetMapping("/notification")
+  @GetMapping("/notifications")
   public ResponseEntity<List<Notification>> getNotifications(
       @RequestHeader("X-User-Id") String userId) {
     List<Notification> notifications

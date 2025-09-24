@@ -21,7 +21,7 @@ server:
   error:
     include-message: always
   servlet:
-    context-path: /
+    context-path: /api/v1
 app:
   repository:
     initialize-with-dummy-data: true
@@ -30,3 +30,7 @@ springdoc:
     path: /v1/api-docs
   swagger-ui:
     path: /swagger-ui
+cors:
+  allowed-origins:
+    - http://localhost:5173
+    - https://sau-portal.de

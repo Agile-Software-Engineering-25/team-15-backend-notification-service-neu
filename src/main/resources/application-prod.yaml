@@ -15,4 +15,4 @@ spring:
 
 server:
   servlet:
-    context-path: /notification-service
+    context-path: /api/v1/notification-service

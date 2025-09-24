@@ -52,7 +52,6 @@ public class Notification {
 
   @Column
   private String notificationType;
-
 }
 
 

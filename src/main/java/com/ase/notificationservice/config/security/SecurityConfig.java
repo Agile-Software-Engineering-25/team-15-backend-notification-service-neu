@@ -1,13 +1,23 @@
-package com.ase.notificationservice.config;
+package com.ase.notificationservice.config.security;
 
 import java.io.IOException;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,10 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
+@EnableWebSecurity
+@EnableConfigurationProperties(CorsConfigProperties.class)
 public class SecurityConfig {
 
   @Value("${server.servlet.context-path}")
-  private  String basePath;
+  private String basePath;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,15 +46,15 @@ public class SecurityConfig {
     };
 
     http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-        .requestMatchers(swaggerPaths).permitAll()
-        .anyRequest().permitAll()
+        .authorizeHttpRequests(auth ->
+          auth
+            .requestMatchers(swaggerPaths).permitAll()
         )
         .addFilterBefore(
             new PlaceholderTokenFilter(this.basePath),
             UsernamePasswordAuthenticationFilter.class
-        );
+        )
+        .cors(Customizer.withDefaults());
     return http.build();
   }
 
@@ -82,5 +94,19 @@ public class SecurityConfig {
 
       filterChain.doFilter(request, response);
     }
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource(CorsConfigProperties corsConfigProperties) {
+    log.info("Configuring CORS settings...");
+
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of(corsConfigProperties.allowedOrigins()));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("*"));
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }
