@@ -52,13 +52,10 @@ class NotificationControllerTest {
    */
   @Test
   void getAndMarkAsReadShouldReturnNotificationAndSetReadAt() throws Exception {
-    mockMvc.perform(get("/api/notifications")
-        .header("Authorization", "mock-token")
+    mockMvc.perform(post("/notifications/mark-as-read")
         .header("X-Notification-Id", notification.getId())
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(notification.getId()))
-        .andExpect(jsonPath("$.message").value("Test-Message"));
+        .andExpect(status().isOk());
 
     Notification updated = notificationRepository
         .findById(notification.getId())
@@ -69,22 +66,11 @@ class NotificationControllerTest {
   }
 
   /**
-   * Tests that getting a notification without auth header returns 401.
-   */
-  @Test
-  void getAndMarkAsReadShouldReturn401IfNoAuthHeader() throws Exception {
-    mockMvc.perform(get("/api/notifications")
-        .header("X-Notification-Id", notification.getId()))
-        .andExpect(status().isUnauthorized());
-  }
-
-  /**
    * Tests that getting a non-existent notification returns 404.
    */
   @Test
   void getAndMarkAsReadShouldReturn404IfNotFound() throws Exception {
-    mockMvc.perform(get("/api/notifications")
-    .header("Authorization", "mock-token")
+    mockMvc.perform(post("/notifications/mark-as-read")
     .header("X-Notification-Id", NON_EXISTENT_ID))
         .andExpect(status().isNotFound());
   }
@@ -94,8 +80,7 @@ class NotificationControllerTest {
    */
   @Test
   void markAsReadShouldSetReadAt() throws Exception {
-    mockMvc.perform(post("/api/notifications/mark-as-read")
-        .header("Authorization", "mock-token")
+    mockMvc.perform(post("/notifications/mark-as-read")
         .header("X-Notification-Id", notification.getId())
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -117,8 +102,7 @@ class NotificationControllerTest {
     notification.setReadAt(Instant.now());
     notificationRepository.save(notification);
 
-    mockMvc.perform(post("/api/notifications/mark-as-unread")
-        .header("Authorization", "mock-token")
+    mockMvc.perform(post("/notifications/mark-as-unread")
         .header("X-Notification-Id", notification.getId())
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ase.notificationservice.dto.NotificationRequestDto;
 import com.ase.notificationservice.model.Notification;
@@ -25,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@SecurityRequirement(name = "TokenAuth")
+@RequestMapping("/notifications")
 public class NotificationController {
 
   private final NotificationService notificationService;
 
-  @PostMapping("/notifications")
+  @PostMapping
   public ResponseEntity<List<Notification>> postNotification(
       @RequestBody NotificationRequestDto notificationRequestDto) {
 
@@ -65,7 +66,7 @@ public class NotificationController {
     return ResponseEntity.ok(created);
   }
 
-  @GetMapping("/notifications")
+  @GetMapping
   public ResponseEntity<List<Notification>> getNotifications(
       @RequestHeader("X-User-Id") String userId) {
     List<Notification> notifications
