@@ -1,9 +1,9 @@
-package com.ase.notificationservice.repository;
+package com.ase.notificationservice.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.ase.notificationservice.model.Notification;
-import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import com.ase.notificationservice.entities.Notification;
 
 /**
  * Repository interface for managing Notification entities.

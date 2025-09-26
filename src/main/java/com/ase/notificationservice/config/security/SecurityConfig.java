@@ -1,7 +1,7 @@
 package com.ase.notificationservice.config.security;
 
+
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -35,7 +36,8 @@ public class SecurityConfig {
   }
 
   @Bean
-  public CorsConfigurationSource corsConfigurationSource(CorsConfigProperties corsConfigProperties) {
+  public CorsConfigurationSource corsConfigurationSource(
+      CorsConfigProperties corsConfigProperties) {
     log.info("Configuring CORS settings...");
 
     CorsConfiguration configuration = new CorsConfiguration();

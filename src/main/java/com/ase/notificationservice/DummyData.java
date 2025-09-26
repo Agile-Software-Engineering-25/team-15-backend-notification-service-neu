@@ -1,9 +1,8 @@
 package com.ase.notificationservice;
 
 import java.util.List;
+import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.enums.NotificationTypes;
-import com.ase.notificationservice.model.Notification;
-
 
 public class DummyData {
 

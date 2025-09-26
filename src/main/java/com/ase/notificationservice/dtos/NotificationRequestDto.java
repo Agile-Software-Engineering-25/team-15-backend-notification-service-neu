@@ -1,4 +1,4 @@
-package com.ase.notificationservice.dto;
+package com.ase.notificationservice.dtos;
 
 import com.ase.notificationservice.enums.NotificationTypes;
 import lombok.Data;

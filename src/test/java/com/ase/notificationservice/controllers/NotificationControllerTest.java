@@ -1,10 +1,8 @@
-package com.ase.notificationservice.controller;
+package com.ase.notificationservice.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.notificationservice.model.Notification;
-import com.ase.notificationservice.repository.NotificationRepository;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.repositories.NotificationRepository;
 
 /**
  * Integration tests for the NotificationController.
