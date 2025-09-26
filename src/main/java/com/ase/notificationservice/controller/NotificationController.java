@@ -97,9 +97,4 @@ public class NotificationController {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Notification not found");
   }
-
-  @GetMapping("/tmp")
-  public ResponseEntity<String> tmp() {
-    return ResponseEntity.ok("Temporary endpoint");
-  }
 }
