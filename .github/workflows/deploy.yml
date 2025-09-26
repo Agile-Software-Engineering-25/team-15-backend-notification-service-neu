@@ -69,6 +69,6 @@ jobs:
         with:
           kubeconfig: ${{ secrets.KUBECONFIG }}
           namespace: ${{ vars.K8S_NAMESPACE }}
-          deployment: notification-service
+          deployment: ase-notification-service
           image: ghcr.io/agile-software-engineering-25/team-15-backend-notification-service
           tag: ${{ github.sha }}
