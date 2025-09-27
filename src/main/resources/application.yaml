@@ -21,7 +21,7 @@ server:
   error:
     include-message: always
   servlet:
-    context-path: /notification-service/api/v1
+    context-path: /api/v1
 app:
   repository:
     initialize-with-dummy-data: true
