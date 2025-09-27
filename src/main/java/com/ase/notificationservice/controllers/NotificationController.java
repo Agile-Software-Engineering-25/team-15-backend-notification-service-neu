@@ -4,20 +4,18 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.ase.notificationservice.dtos.NotificationDto;
 import com.ase.notificationservice.dtos.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.services.NotificationService;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,10 +73,10 @@ public class NotificationController {
     return ResponseEntity.ok(notifications);
   }
 
-  @PostMapping("/mark-as-unread")
+  @PostMapping("/mark-as-unread/{notificationId}")
   public ResponseEntity<?> markAsUnread(
-      @RequestBody NotificationDto notificationDto) {
-    boolean success = notificationService.markAsUnread(notificationDto.getId());
+      @PathVariable String notificationId) {
+    boolean success = notificationService.markAsUnread(notificationId);
     if (success) {
       return ResponseEntity.ok("Notification marked as unread");
     }
@@ -86,10 +84,10 @@ public class NotificationController {
         .body("Notification not found");
   }
 
-  @PostMapping("/mark-as-read")
+  @PostMapping("/mark-as-read/{notificationId}")
   public ResponseEntity<?> markAsRead(
-      @RequestBody NotificationDto notificationDto) {
-    boolean success = notificationService.markAsRead(notificationDto.getId());
+      @PathVariable String notificationId) {
+    boolean success = notificationService.markAsRead(notificationId);
     if (success) {
       return ResponseEntity.ok("Notification marked as read");
     }
