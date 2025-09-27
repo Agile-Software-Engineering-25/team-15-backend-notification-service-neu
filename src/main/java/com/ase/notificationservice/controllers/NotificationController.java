@@ -62,7 +62,7 @@ public class NotificationController {
       created.add(notificationService.createNotification(notification));
     }
 
-    return ResponseEntity.ok(created);
+    return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @GetMapping
