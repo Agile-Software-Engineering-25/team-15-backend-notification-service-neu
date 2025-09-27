@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.time.Instant;
+import com.ase.notificationservice.dtos.NotificationDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,16 @@ class NotificationControllerTest {
   private static final long NON_EXISTENT_ID = 99999L;
 
   @Autowired
+  private ObjectMapper objectMapper;
+
+  @Autowired
   private MockMvc mockMvc;
 
   @Autowired
   private NotificationRepository notificationRepository;
 
   private Notification notification;
+  private NotificationDto notificationDto;
 
   /**
    * Sets up test data before each test.
@@ -43,6 +49,8 @@ class NotificationControllerTest {
     notificationRepository.deleteAll();
     notification = Notification.builder().message("Test-Message").readAt(null).build();
     notification = notificationRepository.save(notification);
+
+    notificationDto = NotificationDto.builder().id(notification.getId()).build();
   }
 
   /**
@@ -51,7 +59,8 @@ class NotificationControllerTest {
   @Test
   void getAndMarkAsReadShouldReturnNotificationAndSetReadAt() throws Exception {
     mockMvc.perform(post("/notifications/mark-as-read")
-        .header("X-Notification-Id", notification.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(notificationDto))
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
@@ -69,7 +78,9 @@ class NotificationControllerTest {
   @Test
   void getAndMarkAsReadShouldReturn404IfNotFound() throws Exception {
     mockMvc.perform(post("/notifications/mark-as-read")
-    .header("X-Notification-Id", NON_EXISTENT_ID))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(NotificationDto.builder().id("Does not exist").build()))
+        .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
   }
 
@@ -79,7 +90,8 @@ class NotificationControllerTest {
   @Test
   void markAsReadShouldSetReadAt() throws Exception {
     mockMvc.perform(post("/notifications/mark-as-read")
-        .header("X-Notification-Id", notification.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(notificationDto))
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().string("Notification marked as read"));
@@ -101,7 +113,8 @@ class NotificationControllerTest {
     notificationRepository.save(notification);
 
     mockMvc.perform(post("/notifications/mark-as-unread")
-        .header("X-Notification-Id", notification.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(notificationDto))
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().string("Notification marked as unread"));

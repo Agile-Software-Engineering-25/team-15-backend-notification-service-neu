@@ -4,7 +4,7 @@ import com.ase.notificationservice.enums.NotificationTypes;
 import lombok.Data;
 
 @Data
-public class NotificationRequestDto {
+public class NotificationCreationDto {
   private String[] users;
   private String[] groups;
   private String title;

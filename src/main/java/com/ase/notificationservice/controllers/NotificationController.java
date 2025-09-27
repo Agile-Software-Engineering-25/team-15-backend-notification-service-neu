@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.ase.notificationservice.dtos.NotificationDto;
+import com.ase.notificationservice.dtos.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ase.notificationservice.dtos.NotificationRequestDto;
+import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.services.NotificationService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,13 +34,13 @@ public class NotificationController {
 
   @PostMapping
   public ResponseEntity<List<Notification>> postNotification(
-      @RequestBody NotificationRequestDto notificationRequestDto) {
+      @RequestBody NotificationCreationDto notificationCreationDto) {
 
     List<Notification> created = new ArrayList<>();
 
     List<String> allUsers = new ArrayList<>();
-    if (notificationRequestDto.getUsers() != null) {
-      allUsers.addAll(Arrays.asList(notificationRequestDto.getUsers()));
+    if (notificationCreationDto.getUsers() != null) {
+      allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
     }
 
     /* TODO add when API split group is available
@@ -51,11 +53,11 @@ public class NotificationController {
     for (String user : allUsers.stream().distinct().toList()) {
       Notification notification = Notification.builder()
           .userId(user)
-          .message(notificationRequestDto.getMessage())
-          .title(notificationRequestDto.getTitle())
-          .priority(notificationRequestDto.isPriority())
-          .shortDescription(notificationRequestDto.getShortDescription())
-          .notificationType(String.valueOf(notificationRequestDto.getNotificationType()))
+          .message(notificationCreationDto.getMessage())
+          .title(notificationCreationDto.getTitle())
+          .priority(notificationCreationDto.isPriority())
+          .shortDescription(notificationCreationDto.getShortDescription())
+          .notificationType(String.valueOf(notificationCreationDto.getNotificationType()))
           .receivedAt(receivedTimestamp)
           .build();
 
@@ -67,17 +69,16 @@ public class NotificationController {
 
   @GetMapping
   public ResponseEntity<List<Notification>> getNotifications(
-      @RequestHeader("X-User-Id") String userId) {
+      @RequestBody UserDto user) {
     List<Notification> notifications
-        = notificationService.getNotificationsForUser(userId);
+        = notificationService.getNotificationsForUser(user.getId());
     return ResponseEntity.ok(notifications);
   }
 
   @PostMapping("/mark-as-unread")
   public ResponseEntity<?> markAsUnread(
-      @Parameter(description = "Notification ID", example = "7c50d311-b813-4cdd-b8f8-34e7df684e18")
-      @RequestHeader("X-Notification-Id") String id) {
-    boolean success = notificationService.markAsUnread(id);
+      @RequestBody NotificationDto notificationDto) {
+    boolean success = notificationService.markAsUnread(notificationDto.getId());
     if (success) {
       return ResponseEntity.ok("Notification marked as unread");
     }
@@ -87,9 +88,8 @@ public class NotificationController {
 
   @PostMapping("/mark-as-read")
   public ResponseEntity<?> markAsRead(
-      @Parameter(description = "Notification ID", example = "1")
-      @RequestHeader("X-Notification-Id") String id) {
-    boolean success = notificationService.markAsRead(id);
+      @RequestBody NotificationDto notificationDto) {
+    boolean success = notificationService.markAsRead(notificationDto.getId());
     if (success) {
       return ResponseEntity.ok("Notification marked as read");
     }
