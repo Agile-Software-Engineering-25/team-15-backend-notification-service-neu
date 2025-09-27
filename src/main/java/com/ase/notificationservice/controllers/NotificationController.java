@@ -18,6 +18,7 @@ import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * REST controller for managing notification operations.
@@ -77,21 +78,20 @@ public class NotificationController {
   public ResponseEntity<?> markAsUnread(
       @PathVariable String notificationId) {
     boolean success = notificationService.markAsUnread(notificationId);
-    if (success) {
-      return ResponseEntity.ok("Notification marked as unread");
+    if (!success) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found");
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body("Notification not found");
+
+    return ResponseEntity.ok("Notification marked as unread");
   }
 
   @PostMapping("/mark-as-read/{notificationId}")
   public ResponseEntity<?> markAsRead(
       @PathVariable String notificationId) {
     boolean success = notificationService.markAsRead(notificationId);
-    if (success) {
-      return ResponseEntity.ok("Notification marked as read");
+    if (!success) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found");
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body("Notification not found");
+    return ResponseEntity.ok("Notification marked as read");
   }
 }
