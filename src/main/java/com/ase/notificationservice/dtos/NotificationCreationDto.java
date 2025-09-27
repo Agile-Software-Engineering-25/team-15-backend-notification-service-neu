@@ -1,12 +1,10 @@
-package com.ase.notificationservice.dto;
+package com.ase.notificationservice.dtos;
 
+import com.ase.notificationservice.enums.NotificationTypes;
 import lombok.Data;
 
-enum NotificationTypes {
-  Mail, UI, All
-}
 @Data
-public class NotificationRequestDto {
+public class NotificationCreationDto {
   private String[] users;
   private String[] groups;
   private String title;

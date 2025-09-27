@@ -1,4 +1,4 @@
-package com.ase.notificationservice.service;
+package com.ase.notificationservice.services;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ase.notificationservice.DummyData;
 import com.ase.notificationservice.config.RepositoryConfig;
-import com.ase.notificationservice.model.Notification;
-import com.ase.notificationservice.repository.NotificationRepository;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.repositories.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -98,5 +98,9 @@ public class NotificationService {
 
     log.info("Inserting {} dummy notifications", DummyData.NOTIFICATIONS.size());
     DummyData.NOTIFICATIONS.forEach(this::createNotification);
+  }
+
+  public java.util.List<Notification> getNotificationsForUser(String userId) {
+    return notificationRepository.findByUserId(userId);
   }
 }
