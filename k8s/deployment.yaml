@@ -29,13 +29,13 @@ spec:
               cpu: "300m"
           readinessProbe:
             httpGet:
-              path: /notification-service/api/v1
+              path: /notification-service/api/v1/actuator/health/readiness
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /notification-service/api/v1
+              path: /notification-service/api/v1/actuator/health/liveness
               port: 8080
             initialDelaySeconds: 120
             periodSeconds: 20

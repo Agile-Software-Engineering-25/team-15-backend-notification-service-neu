@@ -30,6 +30,16 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,readiness,liveness
+      base-path: /actuator
+  endpoint:
+    health:
+      probes:
+        enabled: true
 cors:
   allowed-origins:
     - http://localhost:5173
