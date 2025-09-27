@@ -26,8 +26,6 @@ public class NotificationService {
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
 
-  private static final int NOTIFICATION_PAGE_SIZE = 5;
-
   /**
    * Marks a notification as unread by setting its readAt timestamp to null.
    *
@@ -103,6 +101,6 @@ public class NotificationService {
   }
 
   public java.util.List<Notification> getNotificationsForUser(String userId) {
-    return notificationRepository.findByUserId(userId).subList(0, NOTIFICATION_PAGE_SIZE);
+    return notificationRepository.findByUserId(userId);
   }
 }
