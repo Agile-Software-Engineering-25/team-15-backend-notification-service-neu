@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.ase.notificationservice.dtos.NotificationCreationDto;
-import com.ase.notificationservice.dtos.UserDto;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.services.NotificationService;
 import lombok.RequiredArgsConstructor;
