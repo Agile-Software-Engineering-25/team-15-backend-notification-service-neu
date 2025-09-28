@@ -4,6 +4,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.repositories.NotificationRepository;
+import com.ase.notificationservice.services.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.ase.notificationservice.dtos.NotificationCreationDto;
@@ -30,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
 
   private final NotificationService notificationService;
+  private final EmailService emailService;
 
   @PostMapping
   public ResponseEntity<List<Notification>> postNotification(
@@ -94,4 +100,10 @@ public class NotificationController {
     }
     return ResponseEntity.ok("Notification marked as read");
   }
+  @PostMapping("/email")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public void sendEmail(@Valid @RequestBody EmailNotificationRequestDto req) {
+    emailService.sendEmail(req);
+  }
+
 }

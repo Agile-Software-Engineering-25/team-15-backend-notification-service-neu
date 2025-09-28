@@ -17,6 +17,13 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
+  mail:
+    host: py-smtp-relay
+    port: 2525
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+      mail.mime.address.strict: false
 server:
   error:
     include-message: always
@@ -25,6 +32,8 @@ server:
 app:
   repository:
     initialize-with-dummy-data: true
+  mail:
+    defaultFrom: "sau.portal.noreply@gmail.com"
 springdoc:
   api-docs:
     path: /api-docs
