@@ -56,7 +56,7 @@ public class NotificationController {
           .title(notificationCreationDto.getTitle())
           .priority(notificationCreationDto.isPriority())
           .shortDescription(notificationCreationDto.getShortDescription())
-          .notificationType(String.valueOf(notificationCreationDto.getNotificationType()))
+          .notificationType(notificationCreationDto.getNotificationType())
           .receivedAt(receivedTimestamp)
           .build();
 

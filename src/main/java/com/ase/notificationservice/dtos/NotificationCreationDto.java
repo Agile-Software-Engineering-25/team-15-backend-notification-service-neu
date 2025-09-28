@@ -1,6 +1,6 @@
 package com.ase.notificationservice.dtos;
 
-import com.ase.notificationservice.enums.NotificationTypes;
+import com.ase.notificationservice.enums.NotificationType;
 import lombok.Data;
 
 @Data
@@ -11,5 +11,5 @@ public class NotificationCreationDto {
   private String message;
   private boolean priority;
   private String shortDescription;
-  private NotificationTypes notificationType;
+  private NotificationType notificationType;
 }

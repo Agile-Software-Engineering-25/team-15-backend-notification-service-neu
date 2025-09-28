@@ -1,5 +1,5 @@
 package com.ase.notificationservice.enums;
 
-public enum NotificationTypes {
+public enum NotificationType {
   Mail, UI, All
 }
