@@ -2,6 +2,7 @@ package com.ase.notificationservice.entities;
 
 import java.time.Instant;
 import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,6 +51,9 @@ public class Notification {
 
   @Column
   private String shortDescription;
+
+  @Column
+  private NotifyType notifyType;
 
   @Column
   private NotificationType notificationType;
