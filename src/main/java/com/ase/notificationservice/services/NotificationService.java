@@ -89,7 +89,8 @@ public class NotificationService {
   public Notification createNotification(Notification notification) {
     log.info("Notification to publish: {}", notification);
     Notification saved = notificationRepository.save(notification);
-    messagingTemplate.convertAndSend("/topic/notifications/" + notification.getUserId(), notificationRepository.findByUserId(notification.getUserId()));
+    messagingTemplate.convertAndSend("/topic/notifications/" + notification.getUserId(),
+        notificationRepository.findByUserId(notification.getUserId()));
 
     return saved;
   }
