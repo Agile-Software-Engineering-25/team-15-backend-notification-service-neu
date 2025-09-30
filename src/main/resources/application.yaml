@@ -18,12 +18,15 @@ spring:
     username: sa
     password: password
   mail:
-    host: py-smtp-relay
-    port: 2525
+    host: smtp.strato.de
+    port: 587
+    fromAddress: noreply@sau-portal.de
+    fromName: Notification Service
+    username: noreply@sau-portal.de
+    password: T8Ci]dUe}KHN__2
     properties:
-      mail.smtp.auth: false
-      mail.smtp.starttls.enable: false
-      mail.mime.address.strict: false
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 server:
   error:
     include-message: always
@@ -33,7 +36,7 @@ app:
   repository:
     initialize-with-dummy-data: true
   mail:
-    defaultFrom: "sau.portal.noreply@gmail.com"
+    defaultFrom: "noreply@sau-portal.de"
 springdoc:
   api-docs:
     path: /api-docs
