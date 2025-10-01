@@ -126,7 +126,7 @@
 
         <!-- Import Ordering -->
         <module name="ImportOrder">
-            <property name="groups" value="java, javax,jakarta, org, com"/>
+            <property name="groups" value="java, jakarta, javax, org, com"/>
             <property name="option" value="top"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
         </module>
