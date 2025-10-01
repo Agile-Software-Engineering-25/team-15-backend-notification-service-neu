@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ase.notificationservice.DummyData;
@@ -25,6 +26,7 @@ public class NotificationService {
 
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
+  private final SimpMessagingTemplate messagingTemplate;
 
   /**
    * Marks a notification as unread by setting its readAt timestamp to null.
@@ -86,7 +88,11 @@ public class NotificationService {
   @Transactional
   public Notification createNotification(Notification notification) {
     log.info("Notification to publish: {}", notification);
-    return notificationRepository.save(notification);
+    Notification saved = notificationRepository.save(notification);
+    messagingTemplate.convertAndSend("/topic/notifications/" + notification.getUserId(),
+        notificationRepository.findByUserId(notification.getUserId()));
+
+    return saved;
   }
 
   @EventListener(ApplicationReadyEvent.class)
