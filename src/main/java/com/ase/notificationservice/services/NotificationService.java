@@ -23,6 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class NotificationService {
 
+  /**
+   * TODO:Service um User in Gruppe zu bekommen
+   */
+  public java.util.List<String> getUserIdsForGroup(String groupId) {
+    return java.util.Collections.emptyList();
+  }
+
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
 

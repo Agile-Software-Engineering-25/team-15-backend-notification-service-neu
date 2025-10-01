@@ -29,8 +29,13 @@ public class Notification {
   @Column
   private String id;
 
+
   @Column
   private String userId;
+
+  // Optional: Wenn gesetzt, wird die Notification an alle User dieser Gruppe geschickt.
+  @Column(nullable = true)
+  private String groupId;
 
   @Column
   private String message;
