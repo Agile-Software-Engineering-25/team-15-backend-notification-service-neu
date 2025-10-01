@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.services.NotificationService;
 import com.ase.notificationservice.services.EmailService;
+import com.ase.notificationservice.services.NotificationService;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
