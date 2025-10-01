@@ -15,13 +15,13 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/notifications")
+@RequestMapping("/emails")
 @RequiredArgsConstructor
 public class EmailController {
 
   private final EmailService emailService;
 
-  @PostMapping("/email")
+  @PostMapping()
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void sendEmail(@Valid @RequestBody EmailNotificationRequestDto req)
       throws MessagingException, UnsupportedEncodingException {
