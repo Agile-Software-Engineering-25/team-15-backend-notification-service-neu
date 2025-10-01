@@ -97,7 +97,7 @@ public class EmailService {
   }
 
   private String injectRecipient(
-      String content, String recipientEmail, EmailNotificationRequestDto req) {
+      String content, String recipientEmail) {
     String email = (recipientEmail == null) ? "" : recipientEmail;
     return content.replace("${recipientEmail}", email);
   }
