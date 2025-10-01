@@ -75,9 +75,13 @@ public class EmailService {
       ctx.setVariables(vars);
       return templateEngine.process(req.template().getFileName(), ctx);
     }
-    if (req.text() != null && !req.text().isBlank()) return "<pre>" + escape(req.text()) + "</pre>";
-    return "<p>(no content)</p>";
+
+    if (req.text() != null && !req.text().isBlank()) {
+      return "<pre>" + escape(req.text()) + "</pre>";
+    }
+    throw new IllegalArgumentException("no content ,provide either a template or text");
   }
+
 
   private String resolveText(EmailNotificationRequestDto req, String html) {
     if (req.text() != null && !req.text().isBlank()) {
