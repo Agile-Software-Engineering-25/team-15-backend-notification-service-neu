@@ -23,9 +23,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     String[] allowedOrigins = corsConfigProperties.allowedOrigins();
 
-    registry.addEndpoint("/websocket")   // dein Endpunkt
+    registry.addEndpoint("/websocket")   //endpoint
         .setAllowedOriginPatterns(allowedOrigins)
-        .withSockJS();  // SockJS Support aktivieren
+        .withSockJS();  // SockJS support
   }
 
   @Override
