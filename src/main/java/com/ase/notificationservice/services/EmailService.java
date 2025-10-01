@@ -34,34 +34,30 @@ public class EmailService {
 
   @Async
   @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1500, multiplier = 2.0))
-  public void sendEmail(@NonNull EmailNotificationRequestDto req) {
+  public void sendEmail(@NonNull EmailNotificationRequestDto req)
+      throws MessagingException, UnsupportedEncodingException {
     for (String recipient : req.to()) {
-      try {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+      MimeMessage message = mailSender.createMimeMessage();
+      MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
-        if (fromName != null && !fromName.isBlank()) {
-          helper.setFrom(fromAddress.trim(), fromName);
-        } else {
-          helper.setFrom(fromAddress.trim());
-        }
-
-        if (req.replyTo() != null && !req.replyTo().isBlank()) {
-          helper.setReplyTo(req.replyTo());
-        }
-
-        helper.setTo(recipient);
-        helper.setSubject(req.subject());
-
-        // Render with recipient-specific context
-        String html = resolveHtml(req, recipient);
-        String text = resolveText(req, html);
-
-        helper.setText(text, html);
-        mailSender.send(message);
-      } catch (MessagingException | UnsupportedEncodingException e) {
-        throw new RuntimeException("Failed to send email", e);
+      if (fromName != null && !fromName.isBlank()) {
+        helper.setFrom(fromAddress.trim(), fromName);
+      } else {
+        helper.setFrom(fromAddress.trim());
       }
+
+      if (req.replyTo() != null && !req.replyTo().isBlank()) {
+        helper.setReplyTo(req.replyTo());
+      }
+
+      helper.setTo(recipient);
+      helper.setSubject(req.subject());
+
+      String html = resolveHtml(req, recipient);
+      String text = resolveText(req, html);
+
+      helper.setText(text, html);
+      mailSender.send(message);
     }
   }
 
