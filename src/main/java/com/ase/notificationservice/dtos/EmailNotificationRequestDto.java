@@ -14,7 +14,6 @@ public record EmailNotificationRequestDto(
     EmailTemplate template,
     Map<String, Object> variables,
     String ctaLink,
-    String html,
     String replyTo
 ) {
 

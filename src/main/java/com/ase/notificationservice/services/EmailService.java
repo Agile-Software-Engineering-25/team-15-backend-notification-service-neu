@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,7 @@ import org.thymeleaf.context.Context;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 
 @Service
+@AllArgsConstructor
 public class EmailService {
 
   private final JavaMailSender mailSender;
@@ -30,27 +32,17 @@ public class EmailService {
   @Value("${spring.mail.fromName:}")
   private String fromName;
 
-  public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
-    this.mailSender = mailSender;
-    this.templateEngine = templateEngine;
-  }
-
   @Async
   @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1500, multiplier = 2.0))
   public void sendEmail(@NonNull EmailNotificationRequestDto req) {
-    String baseHtml = resolveHtml(req, null);
-    String baseText = resolveText(req, baseHtml);
-
     for (String recipient : req.to()) {
       try {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper =
-            new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
         if (fromName != null && !fromName.isBlank()) {
           helper.setFrom(fromAddress.trim(), fromName);
-        }
-        else {
+        } else {
           helper.setFrom(fromAddress.trim());
         }
 
@@ -61,42 +53,29 @@ public class EmailService {
         helper.setTo(recipient);
         helper.setSubject(req.subject());
 
-        String html = injectRecipient(baseHtml, recipient, req);
-        String text = injectRecipient(baseText, recipient, req);
+        // Render with recipient-specific context
+        String html = resolveHtml(req, recipient);
+        String text = resolveText(req, html);
 
         helper.setText(text, html);
         mailSender.send(message);
-      }
-      catch (MessagingException | UnsupportedEncodingException e) {
+      } catch (MessagingException | UnsupportedEncodingException e) {
         throw new RuntimeException("Failed to send email", e);
       }
     }
   }
 
   private String resolveHtml(EmailNotificationRequestDto req, String recipientEmail) {
-    if (req.html() != null && !req.html().isBlank()) {
-      return req.html();
-    }
-
     if (req.template() != null) {
       Context ctx = new Context();
       Map<String, Object> vars = new HashMap<>();
-      if (req.variables() != null) {
-        vars.putAll(req.variables());
-      }
-      if (req.ctaLink() != null && !req.ctaLink().isBlank()) {
-        vars.put("ctaLink", req.ctaLink());
-      }
-      if (recipientEmail != null) {
-        vars.put("recipientEmail", recipientEmail);
-      }
+      if (req.variables() != null) vars.putAll(req.variables());
+      if (req.ctaLink() != null && !req.ctaLink().isBlank()) vars.put("ctaLink", req.ctaLink());
+      if (recipientEmail != null) vars.put("recipientEmail", recipientEmail);
       ctx.setVariables(vars);
       return templateEngine.process(req.template().getFileName(), ctx);
     }
-
-    if (req.text() != null && !req.text().isBlank()) {
-      return "<pre>" + escape(req.text()) + "</pre>";
-    }
+    if (req.text() != null && !req.text().isBlank()) return "<pre>" + escape(req.text()) + "</pre>";
     return "<p>(no content)</p>";
   }
 
