@@ -16,8 +16,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import lombok.AllArgsConstructor;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
