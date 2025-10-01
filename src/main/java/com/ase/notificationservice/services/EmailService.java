@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import lombok.AllArgsConstructor;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 
 @Service
