@@ -1,5 +1,4 @@
 package com.ase.notificationservice.services;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-
 @Service
 public class EmailService {
 

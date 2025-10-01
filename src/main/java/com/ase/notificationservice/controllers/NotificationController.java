@@ -1,11 +1,13 @@
 package com.ase.notificationservice.controllers;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import jakarta.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,6 @@ import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.services.EmailService;
 import com.ase.notificationservice.services.NotificationService;
-
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * REST controller for managing notification operations.
  */
