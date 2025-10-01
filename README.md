@@ -30,6 +30,15 @@ cd notificationservice
 mvn clean install
 ```
 
+### Setting Variables
+
+- create a ```.env``` file in the root of your repository
+    - add the following variables to it:
+      ```SPRING_MAIL_USERNAME```
+      ```SPRING_MAIL_PASSWORD```
+- if the ```.env``` file is set up run this command:
+  ```export $(grep -v '^#' .env | xargs)```bash
+
 ### Run the Application
 
 ```bash
