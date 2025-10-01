@@ -38,11 +38,13 @@ public class EmailService {
       throws MessagingException, UnsupportedEncodingException {
     for (String recipient : req.to()) {
       MimeMessage message = mailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+      MimeMessageHelper helper =
+          new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
       if (fromName != null && !fromName.isBlank()) {
         helper.setFrom(fromAddress.trim(), fromName);
-      } else {
+      }
+      else {
         helper.setFrom(fromAddress.trim());
       }
 
@@ -65,9 +67,15 @@ public class EmailService {
     if (req.template() != null) {
       Context ctx = new Context();
       Map<String, Object> vars = new HashMap<>();
-      if (req.variables() != null) vars.putAll(req.variables());
-      if (req.ctaLink() != null && !req.ctaLink().isBlank()) vars.put("ctaLink", req.ctaLink());
-      if (recipientEmail != null) vars.put("recipientEmail", recipientEmail);
+      if (req.variables() != null) {
+        vars.putAll(req.variables());
+      }
+      if (req.ctaLink() != null && !req.ctaLink().isBlank()) {
+        vars.put("ctaLink", req.ctaLink());
+      }
+      if (recipientEmail != null) {
+        vars.put("recipientEmail", recipientEmail);
+      }
       ctx.setVariables(vars);
       return templateEngine.process(req.template().getFileName(), ctx);
     }
