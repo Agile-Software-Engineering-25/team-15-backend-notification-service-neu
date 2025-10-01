@@ -1,19 +1,23 @@
 package com.ase.notificationservice.dtos;
 
+import java.util.List;
+import java.util.Map;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.Map;
+
+import com.ase.notificationservice.enums.EmailTemplate;
 
 public record EmailNotificationRequestDto(
     @NotEmpty List<@Email String> to,
     @NotBlank String subject,
-    String text,                 // plain text (optional)
-    String html,                 // raw HTML (optional)
-    String template,             // template name under templates/email (optional)
-    Map<String, Object> variables,  // template variables
-    String replyTo               // optional
+    String text,
+    EmailTemplate template,
+    Map<String, Object> variables,
+    String ctaLink,
+    String html,
+    String replyTo
 ) {
 
 }
