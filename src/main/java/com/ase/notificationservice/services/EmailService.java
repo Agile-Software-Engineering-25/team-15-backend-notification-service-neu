@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -42,8 +43,8 @@ public class EmailService {
 
     for (String recipient : req.to()) {
       try {
-        var message = mailSender.createMimeMessage();
-        var helper =
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper =
             new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
         if (fromName != null && !fromName.isBlank()) {
@@ -78,7 +79,7 @@ public class EmailService {
     }
 
     if (req.template() != null) {
-      var ctx = new Context();
+      Context ctx = new Context();
       Map<String, Object> vars = new HashMap<>();
       if (req.variables() != null) {
         vars.putAll(req.variables());
@@ -90,7 +91,7 @@ public class EmailService {
         vars.put("recipientEmail", recipientEmail);
       }
       ctx.setVariables(vars);
-      return templateEngine.process(req.template().fileName(), ctx);
+      return templateEngine.process(req.template().getFileName(), ctx);
     }
 
     if (req.text() != null && !req.text().isBlank()) {
