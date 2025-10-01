@@ -15,7 +15,6 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -50,10 +49,10 @@ public class EmailService {
         var helper =
             new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
-        // From (safe + optional display name) — no UnsupportedEncodingException
         if (fromName != null && !fromName.isBlank()) {
           helper.setFrom(fromAddress.trim(), fromName);
-        } else {
+        }
+        else {
           helper.setFrom(fromAddress.trim());
         }
 
@@ -64,13 +63,13 @@ public class EmailService {
         helper.setTo(recipient);
         helper.setSubject(req.subject());
 
-        // If you want recipient-specific variables, render per recipient:
         String html = injectRecipient(baseHtml, recipient, req);
         String text = injectRecipient(baseText, recipient, req);
 
         helper.setText(text, html);
         mailSender.send(message);
-      } catch (MessagingException | UnsupportedEncodingException e) {
+      }
+      catch (MessagingException | UnsupportedEncodingException e) {
         throw new RuntimeException("Failed to send email", e);
       }
     }
@@ -119,7 +118,6 @@ public class EmailService {
   private String injectRecipient(
       String content, String recipientEmail, EmailNotificationRequestDto req) {
     String email = (recipientEmail == null) ? "" : recipientEmail;
-    // trivial token replacement without re-rendering
     return content.replace("${recipientEmail}", email);
   }
 }
