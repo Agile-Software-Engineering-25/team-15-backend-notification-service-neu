@@ -177,7 +177,8 @@ public class NotificationService {
       log.warn("Failed to fetch users for group {}: HTTP {}",
           groupId, response.statusCode());
       return new ArrayList<>();
-    } catch (IOException | InterruptedException e) {
+    }
+    catch (IOException | InterruptedException e) {
       log.error("Error fetching users for group {}: {}",
           groupId, e.getMessage());
       return new ArrayList<>();
@@ -198,7 +199,8 @@ public class NotificationService {
           }
         }
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       log.error("Error parsing user IDs from response: {}", e.getMessage());
     }
     return userIds;
