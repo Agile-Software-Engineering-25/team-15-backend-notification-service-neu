@@ -32,8 +32,14 @@ public class NotificationController {
   private final NotificationService notificationService;
 
   @PostMapping
-  public ResponseEntity<List<Notification>> postNotification(
+  public ResponseEntity<?> postNotification(
       @RequestBody NotificationCreationDto notificationCreationDto) {
+
+    if (notificationCreationDto.getGroups() != null
+        && notificationCreationDto.getGroups().length > 0) {
+      return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+          .body("Group notifications are currently in development. Please use user IDs only.");
+    }
 
     List<Notification> created = new ArrayList<>();
 

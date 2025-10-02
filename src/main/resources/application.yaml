@@ -45,4 +45,5 @@ cors:
     - http://localhost:5173
     - https://sau-portal.de
 userservice:
-  url: http://localhost:8081
+  url: http://localhost:8081  # TODO: Change base URL if needed (local dev)
+  groups-enabled: false  # TODO: Set to true when API is ready

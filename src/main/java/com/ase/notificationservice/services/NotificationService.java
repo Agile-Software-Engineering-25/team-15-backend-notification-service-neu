@@ -41,6 +41,9 @@ public class NotificationService {
   @Value("${userservice.url:http://localhost:8081}")
   private String userServiceUrl;
 
+  @Value("${userservice.groups-enabled:false}")
+  private boolean groupsEnabled;
+
   private final HttpClient httpClient = HttpClient.newHttpClient();
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -127,8 +130,14 @@ public class NotificationService {
   }
 
   public List<String> getUsersInGroup(String groupId) {
+    if (!groupsEnabled) {
+      log.warn("Group notifications are disabled. Group ID: {}", groupId);
+      return new ArrayList<>();
+    }
+
     try {
-      String url = userServiceUrl + "/groups/getusers/" + groupId; //Waiting for real URL hopefully they return a list with userids
+      // TODO: Change "/groups/getusers/" if the actual API endpoint is different
+      String url = userServiceUrl + "/groups/getusers/" + groupId;
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
@@ -156,6 +165,8 @@ public class NotificationService {
     try {
       JsonNode rootNode = objectMapper.readTree(jsonResponse);
 
+      // TODO: Update parsing logic if API response format is different
+      // Expected format: ["userId1", "userId2", "userId3"]
       if (rootNode.isArray()) {
         for (JsonNode element : rootNode) {
           if (element.isTextual()) {
