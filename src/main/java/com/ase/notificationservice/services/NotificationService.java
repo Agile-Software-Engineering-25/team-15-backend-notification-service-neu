@@ -1,7 +1,15 @@
 package com.ase.notificationservice.services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
@@ -12,6 +20,8 @@ import com.ase.notificationservice.DummyData;
 import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.repositories.NotificationRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +37,12 @@ public class NotificationService {
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
   private final SimpMessagingTemplate messagingTemplate;
+
+  @Value("${userservice.url:http://localhost:8081}")
+  private String userServiceUrl;
+
+  private final HttpClient httpClient = HttpClient.newHttpClient();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   /**
    * Marks a notification as unread by setting its readAt timestamp to null.
@@ -106,7 +122,50 @@ public class NotificationService {
     DummyData.NOTIFICATIONS.forEach(this::createNotification);
   }
 
-  public java.util.List<Notification> getNotificationsForUser(String userId) {
+  public List<Notification> getNotificationsForUser(String userId) {
     return notificationRepository.findByUserId(userId);
+  }
+
+  public List<String> getUsersInGroup(String groupId) {
+    try {
+      String url = userServiceUrl + "/groups/getusers/" + groupId; //Waiting for real URL hopefully they return a list with userids
+
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(URI.create(url))
+          .GET()
+          .build();
+
+      HttpResponse<String> response = httpClient.send(request,
+          HttpResponse.BodyHandlers.ofString());
+
+      if (response.statusCode() == 200) {
+        return parseUserIds(response.body());
+      } else {
+        log.warn("Failed to fetch users for group {}: HTTP {}",
+            groupId, response.statusCode());
+        return new ArrayList<>();
+      }
+    } catch (IOException | InterruptedException e) {
+      log.error("Error fetching users for group {}: {}", groupId, e.getMessage());
+      return new ArrayList<>();
+    }
+  }
+
+  private List<String> parseUserIds(String jsonResponse) {
+    List<String> userIds = new ArrayList<>();
+    try {
+      JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+      if (rootNode.isArray()) {
+        for (JsonNode element : rootNode) {
+          if (element.isTextual()) {
+            userIds.add(element.asText());
+          }
+        }
+      }
+    } catch (IOException e) {
+      log.error("Error parsing user IDs from response: {}", e.getMessage());
+    }
+    return userIds;
   }
 }

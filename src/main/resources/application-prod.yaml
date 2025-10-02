@@ -16,3 +16,6 @@ spring:
 server:
   servlet:
     context-path: /notification-service/api/v1
+
+userservice:
+  url: https://sau-portal.de #hopefully they use this url for there get userid from group service

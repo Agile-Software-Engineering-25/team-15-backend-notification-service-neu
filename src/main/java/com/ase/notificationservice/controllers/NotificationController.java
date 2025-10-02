@@ -42,11 +42,13 @@ public class NotificationController {
       allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
     }
 
-    /* TODO add when API split group is available
-    if (notificationRequestDto.getGroups() != null) {
-      //ADD API REQUEST FOR GROUP SPLITTING
+    if (notificationCreationDto.getGroups() != null) {
+      for (String groupId : notificationCreationDto.getGroups()) {
+        List<String> usersInGroup = notificationService.getUsersInGroup(groupId);
+        allUsers.addAll(usersInGroup);
+      }
     }
-    */
+
     Instant receivedTimestamp = Instant.now();
 
     for (String user : allUsers.stream().distinct().toList()) {
