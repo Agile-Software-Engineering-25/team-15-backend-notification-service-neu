@@ -9,7 +9,8 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 public class ThymeleafEmailConfig {
   @Bean
   SpringResourceTemplateResolver emailTemplateResolver() {
-    SpringResourceTemplateResolver springResourceTemplateResolver = new SpringResourceTemplateResolver();
+    SpringResourceTemplateResolver springResourceTemplateResolver
+        = new SpringResourceTemplateResolver();
     springResourceTemplateResolver.setPrefix("classpath:/templates/email/");
     springResourceTemplateResolver.setSuffix(".html");
     springResourceTemplateResolver.setTemplateMode("HTML");
