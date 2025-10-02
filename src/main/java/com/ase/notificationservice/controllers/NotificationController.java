@@ -94,4 +94,5 @@ public class NotificationController {
     }
     return ResponseEntity.ok("Notification marked as read");
   }
+
 }
