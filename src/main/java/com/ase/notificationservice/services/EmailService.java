@@ -83,7 +83,7 @@ public class EmailService {
     if (req.text() != null && !req.text().isBlank()) {
       return "<pre>" + escape(req.text()) + "</pre>";
     }
-    throw new IllegalArgumentException("no content ,provide either a template or text");
+    throw new IllegalArgumentException("no content, provide either a template or text");
   }
 
 

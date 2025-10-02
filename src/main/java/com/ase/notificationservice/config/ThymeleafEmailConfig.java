@@ -9,7 +9,7 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 public class ThymeleafEmailConfig {
   @Bean
   SpringResourceTemplateResolver emailTemplateResolver() {
-    var springResourceTemplateResolver = new SpringResourceTemplateResolver();
+    SpringResourceTemplateResolver springResourceTemplateResolver = new SpringResourceTemplateResolver();
     springResourceTemplateResolver.setPrefix("classpath:/templates/email/");
     springResourceTemplateResolver.setSuffix(".html");
     springResourceTemplateResolver.setTemplateMode("HTML");
@@ -19,7 +19,7 @@ public class ThymeleafEmailConfig {
   }
   @Bean
   SpringTemplateEngine emailTemplateEngine(SpringResourceTemplateResolver emailTemplateResolver) {
-    var engine = new SpringTemplateEngine();
+    SpringTemplateEngine engine = new SpringTemplateEngine();
     engine.setTemplateResolver(emailTemplateResolver);
     return engine;
   }
