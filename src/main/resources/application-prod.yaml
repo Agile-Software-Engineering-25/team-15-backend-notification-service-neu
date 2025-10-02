@@ -18,5 +18,5 @@ server:
     context-path: /notification-service/api/v1
 
 userservice:
-  url: https://sau-portal.de  # TODO: Change production base URL if needed
-  groups-enabled: false  # TODO: Set to true when API is ready
+  url: https://sau-portal.de  # Change production base URL if needed
+  groups-enabled: false  # Set to true when API is ready
