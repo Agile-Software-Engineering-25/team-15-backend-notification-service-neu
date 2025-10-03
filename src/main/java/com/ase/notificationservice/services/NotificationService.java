@@ -5,18 +5,26 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.web.reactive.function.client.WebClient;
 import com.ase.notificationservice.DummyData;
+import com.ase.notificationservice.config.UserServiceProperties;
 import com.ase.notificationservice.config.RepositoryConfig;
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.repositories.NotificationRepository;
@@ -38,7 +46,17 @@ public class NotificationService {
   private final RepositoryConfig repositoryConfig;
   private final UserServiceConfig userServiceConfig;
   private final SimpMessagingTemplate messagingTemplate;
+  private final EmailService emailService;
 
+  private WebClient userClient;
+  @Autowired
+  private UserServiceProperties props;
+  @jakarta.annotation.PostConstruct
+  void init() {
+    userClient = WebClient.builder()
+        .baseUrl(props.getUrl())
+        .build();
+  }
   private final HttpClient httpClient = HttpClient.newHttpClient();
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -112,7 +130,17 @@ public class NotificationService {
     messagingTemplate.convertAndSend(
         "/topic/notifications/" + notification.getUserId(),
         notificationRepository.findByUserId(notification.getUserId()));
+    if ("Mail".equalsIgnoreCase(saved.getNotificationType())
+        || "All".equalsIgnoreCase(saved.getNotificationType())) {
 
+      TransactionSynchronizationManager.registerSynchronization(
+          new TransactionSynchronization() {
+            @Override public void afterCommit() {
+              sendEmailInline(saved);
+            }
+          }
+      );
+    }
     return saved;
   }
 
@@ -139,6 +167,44 @@ public class NotificationService {
    */
   public List<Notification> getNotificationsForUser(final String userId) {
     return notificationRepository.findByUserId(userId);
+  }
+
+  private void sendEmailInline(Notification n) {
+    try {
+      Optional<String> emailOpt = fetchUserEmail(n.getUserId());
+      if (emailOpt.isEmpty() || emailOpt.get().isBlank()) {
+        log.warn("No email found for userId={}, skipping email.", n.getUserId());
+        return;
+      }
+
+      EmailNotificationRequestDto req = new EmailNotificationRequestDto(
+          List.of(emailOpt.get()),
+          n.getTitle() != null ? n.getTitle() : "Notification",
+          n.getMessage() != null ? n.getMessage() : "",
+          null, null, null, null
+      );
+
+      emailService.sendEmail(req);
+      log.info("Sent email for notification {}", n.getId());
+    } catch (Exception e) {
+      log.error("Failed to send email for {}: {}", n.getId(), e.toString(), e);
+    }
+  }
+
+  private Optional<String> fetchUserEmail(String userId) {
+    try {
+      record UserResp(String id, String email) {}
+      UserResp resp = userClient.get()
+          .uri("/users/{id}", userId)
+          .retrieve()
+          .bodyToMono(UserResp.class)
+          .timeout(Duration.ofMillis(props.getTimeoutMs()))
+          .block();
+      return Optional.ofNullable(resp != null ? resp.email() : null);
+    } catch (Exception e) {
+      log.warn("UserService lookup failed for {}: {}", userId, e.toString());
+      return Optional.empty();
+    }
   }
 
   /**
