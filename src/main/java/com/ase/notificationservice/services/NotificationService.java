@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
-@EnableConfigurationProperties(RepositoryConfig.class)
+@EnableConfigurationProperties({RepositoryConfig.class, UserServiceConfig.class})
 @RequiredArgsConstructor
 public class NotificationService {
 

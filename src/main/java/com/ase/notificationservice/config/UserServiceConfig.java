@@ -1,5 +1,6 @@
 package com.ase.notificationservice.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import lombok.Getter;
@@ -8,19 +9,17 @@ import lombok.Setter;
 /**
  * Configuration class for user service endpoints and settings.
  */
-@Configuration
-@ConfigurationProperties(prefix = "userservice")
-@Getter
-@Setter
+@ConfigurationProperties(prefix = "user-service")
+@Data
 public class UserServiceConfig {
 
   /**
    * Base URL of the user service.
    */
-  private String url = "http://localhost:8081";
+  private String url;
 
   /**
    * Whether group notifications are enabled.
    */
-  private boolean groupsEnabled = false;
+  private boolean groupsEnabled;
 }

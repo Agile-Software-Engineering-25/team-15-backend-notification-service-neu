@@ -44,6 +44,6 @@ cors:
   allowed-origins:
     - http://localhost:5173
     - https://sau-portal.de
-userservice:
+user-service:
   url: http://localhost:8081  # Change base URL if needed (local dev)
   groups-enabled: false  # Set to true when API is ready

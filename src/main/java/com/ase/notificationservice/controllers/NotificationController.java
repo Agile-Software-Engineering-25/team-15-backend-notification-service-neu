@@ -35,24 +35,23 @@ public class NotificationController {
   public ResponseEntity<?> postNotification(
       @RequestBody NotificationCreationDto notificationCreationDto) {
 
-    if (notificationCreationDto.getGroups() != null
-        && notificationCreationDto.getGroups().length > 0) {
-      return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-          .body("Group notifications are currently in development. Please use user IDs only.");
-    }
-
     List<Notification> created = new ArrayList<>();
 
     List<String> allUsers = new ArrayList<>();
     if (notificationCreationDto.getUsers() != null) {
-      allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
+        allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
     }
 
-    if (notificationCreationDto.getGroups() != null) {
-      for (String groupId : notificationCreationDto.getGroups()) {
-        List<String> usersInGroup = notificationService.getUsersInGroup(groupId);
-        allUsers.addAll(usersInGroup);
+    try {
+      if (notificationCreationDto.getGroups() != null) {
+        for (String groupId : notificationCreationDto.getGroups()) {
+          List<String> usersInGroup = notificationService.getUsersInGroup(groupId);
+          allUsers.addAll(usersInGroup);
+        }
       }
+    }
+    catch (IllegalStateException e) {
+      return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
     }
 
     Instant receivedTimestamp = Instant.now();
