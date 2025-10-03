@@ -142,10 +142,7 @@ public class NotificationService {
     }
     return saved;
   }
-  private boolean shouldSendMail(Notification n) {
-    return Objects.equals(n.getNotificationType(), NotificationTypes.Mail.toString())
-        || Objects.equals(n.getNotificationType(), NotificationTypes.All.toString());
-  }
+
   /**
    * Initializes dummy data on application startup.
    */
@@ -205,6 +202,11 @@ public class NotificationService {
       log.warn("UserService lookup failed for {}: {}", userId, e.toString());
       return Optional.empty();
     }
+  }
+
+  private boolean shouldSendMail(Notification n) {
+    return Objects.equals(n.getNotificationType(), NotificationTypes.Mail.toString())
+        || Objects.equals(n.getNotificationType(), NotificationTypes.All.toString());
   }
 
   /**
