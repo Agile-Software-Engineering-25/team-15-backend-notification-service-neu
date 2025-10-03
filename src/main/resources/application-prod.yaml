@@ -16,3 +16,6 @@ spring:
 server:
   servlet:
     context-path: /notification-service/api/v1
+userservice:
+  url: https://sau-portal.de
+  timeout-ms: 2000

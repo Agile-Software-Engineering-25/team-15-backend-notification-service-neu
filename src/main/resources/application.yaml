@@ -56,3 +56,6 @@ cors:
   allowed-origins:
     - http://localhost:5173
     - https://sau-portal.de
+userservice:
+  url: http://localhost:8081
+  timeout-ms: 2000
