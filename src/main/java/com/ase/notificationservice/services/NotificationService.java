@@ -9,9 +9,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
@@ -22,11 +21,11 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.reactive.function.client.WebClient;
 import com.ase.notificationservice.DummyData;
-import com.ase.notificationservice.config.UserServiceProperties;
 import com.ase.notificationservice.config.RepositoryConfig;
-import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.config.UserServiceConfig;
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationTypes;
 import com.ase.notificationservice.repositories.NotificationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,12 +48,10 @@ public class NotificationService {
   private final EmailService emailService;
 
   private WebClient userClient;
-  @Autowired
-  private UserServiceProperties props;
   @jakarta.annotation.PostConstruct
   void init() {
     userClient = WebClient.builder()
-        .baseUrl(props.getUrl())
+        .baseUrl(userServiceConfig.getUrl())
         .build();
   }
   private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -84,7 +81,7 @@ public class NotificationService {
    * Marks a notification as read
    * by setting its readAt timestamp to the current time.
    *
-   * @param id
+   * @param id id of the notification
    * @return true if the notification was found and updated, false otherwise
    */
   @Transactional
@@ -130,20 +127,21 @@ public class NotificationService {
     messagingTemplate.convertAndSend(
         "/topic/notifications/" + notification.getUserId(),
         notificationRepository.findByUserId(notification.getUserId()));
-    if ("Mail".equalsIgnoreCase(saved.getNotificationType())
-        || "All".equalsIgnoreCase(saved.getNotificationType())) {
-
-      TransactionSynchronizationManager.registerSynchronization(
-          new TransactionSynchronization() {
-            @Override public void afterCommit() {
-              sendEmailInline(saved);
-            }
-          }
-      );
+    if (shouldSendMail(saved)) {
+      if (TransactionSynchronizationManager.isSynchronizationActive()) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+          @Override public void afterCommit() { sendEmailInline(saved); }
+        });
+      } else {
+        sendEmailInline(saved);
+      }
     }
     return saved;
   }
-
+  private boolean shouldSendMail(Notification n) {
+    return Objects.equals(n.getNotificationType(), NotificationTypes.Mail.toString())
+        || Objects.equals(n.getNotificationType(), NotificationTypes.All.toString());
+  }
   /**
    * Initializes dummy data on application startup.
    */
@@ -169,25 +167,21 @@ public class NotificationService {
     return notificationRepository.findByUserId(userId);
   }
 
-  private void sendEmailInline(Notification n) {
+  private void sendEmailInline(Notification notification) {
+    String email = fetchUserEmail(notification.getUserId())
+        .filter(s -> !s.isBlank())
+        .orElseThrow(() ->
+            new IllegalStateException("No email found for userId=" + notification.getUserId()));
+    EmailNotificationRequestDto req = EmailNotificationRequestDto.builder()
+        .to(List.of(email))
+        .subject(notification.getTitle() != null ? notification.getTitle() : "Notification")
+        .text(notification.getMessage() != null ? notification.getMessage() : "")
+        .build();
     try {
-      Optional<String> emailOpt = fetchUserEmail(n.getUserId());
-      if (emailOpt.isEmpty() || emailOpt.get().isBlank()) {
-        log.warn("No email found for userId={}, skipping email.", n.getUserId());
-        return;
-      }
-
-      EmailNotificationRequestDto req = new EmailNotificationRequestDto(
-          List.of(emailOpt.get()),
-          n.getTitle() != null ? n.getTitle() : "Notification",
-          n.getMessage() != null ? n.getMessage() : "",
-          null, null, null, null
-      );
-
       emailService.sendEmail(req);
-      log.info("Sent email for notification {}", n.getId());
+      log.info("Sent email for notification {}", notification.getId());
     } catch (Exception e) {
-      log.error("Failed to send email for {}: {}", n.getId(), e.toString(), e);
+      throw new IllegalStateException("Failed to send email for " + notification.getId(), e);
     }
   }
 
@@ -198,7 +192,7 @@ public class NotificationService {
           .uri("/users/{id}", userId)
           .retrieve()
           .bodyToMono(UserResp.class)
-          .timeout(Duration.ofMillis(props.getTimeoutMs()))
+          .timeout(Duration.ofMillis(userServiceConfig.getTimeoutMs()))
           .block();
       return Optional.ofNullable(resp != null ? resp.email() : null);
     } catch (Exception e) {

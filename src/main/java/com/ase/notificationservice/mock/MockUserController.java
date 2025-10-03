@@ -11,6 +11,6 @@ public class MockUserController {
 
   @GetMapping("/{id}")
   public UserResp getUser(@PathVariable String id) {
-    return new UserResp(id,"@nekkrause@gmail.com");
+    return new UserResp(id,"example@example.com");
   }
 }

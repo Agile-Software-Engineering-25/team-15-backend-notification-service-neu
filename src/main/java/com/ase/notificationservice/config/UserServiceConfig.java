@@ -19,4 +19,8 @@ public class UserServiceConfig {
    * Whether group notifications are enabled.
    */
   private boolean groupsEnabled;
+  /**
+   * How Long till a Timeout is thrown
+   */
+  private int timeoutMs;
 }
