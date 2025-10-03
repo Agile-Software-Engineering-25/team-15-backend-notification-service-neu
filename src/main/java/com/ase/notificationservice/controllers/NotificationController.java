@@ -32,7 +32,7 @@ public class NotificationController {
   private final NotificationService notificationService;
 
   @PostMapping
-  public ResponseEntity<List<Notification>> postNotification(
+  public ResponseEntity<?> postNotification(
       @RequestBody NotificationCreationDto notificationCreationDto) {
 
     List<Notification> created = new ArrayList<>();
@@ -42,11 +42,18 @@ public class NotificationController {
       allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
     }
 
-    /* TODO add when API split group is available
-    if (notificationRequestDto.getGroups() != null) {
-      //ADD API REQUEST FOR GROUP SPLITTING
+    try {
+      if (notificationCreationDto.getGroups() != null) {
+        for (String groupId : notificationCreationDto.getGroups()) {
+          List<String> usersInGroup = notificationService.getUsersInGroup(groupId);
+          allUsers.addAll(usersInGroup);
+        }
+      }
     }
-    */
+    catch (IllegalStateException e) {
+      return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
+    }
+
     Instant receivedTimestamp = Instant.now();
 
     for (String user : allUsers.stream().distinct().toList()) {
