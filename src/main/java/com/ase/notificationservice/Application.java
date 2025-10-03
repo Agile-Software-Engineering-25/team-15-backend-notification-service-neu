@@ -1,5 +1,6 @@
 package com.ase.notificationservice;
 
+import com.ase.notificationservice.config.UserServiceProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
