@@ -39,7 +39,7 @@ public class NotificationController {
 
     List<String> allUsers = new ArrayList<>();
     if (notificationCreationDto.getUsers() != null) {
-        allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
+      allUsers.addAll(Arrays.asList(notificationCreationDto.getUsers()));
     }
 
     try {
