@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,24 +76,19 @@ public class NotificationController {
     return ResponseEntity.ok(notifications);
   }
 
-  @PostMapping("/mark-as-unread/{notificationId}")
-  public ResponseEntity<?> markAsUnread(
-      @PathVariable String notificationId) {
-    boolean success = notificationService.markAsUnread(notificationId);
-    if (!success) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found");
-    }
+@PostMapping("/mark-as-unread/{notificationId}")
+public ResponseEntity<Notification> markAsUnread(@PathVariable String notificationId) {
+    Optional<Notification> notificationOpt = notificationService.getAndMarkAsUnread(notificationId);
+    return notificationOpt
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
+}
 
-    return ResponseEntity.ok("Notification marked as unread");
-  }
-
-  @PostMapping("/mark-as-read/{notificationId}")
-  public ResponseEntity<?> markAsRead(
-      @PathVariable String notificationId) {
-    boolean success = notificationService.markAsRead(notificationId);
-    if (!success) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found");
-    }
-    return ResponseEntity.ok("Notification marked as read");
-  }
+@PostMapping("/mark-as-read/{notificationId}")
+public ResponseEntity<Notification> markAsRead(@PathVariable String notificationId) {
+    Optional<Notification> notificationOpt = notificationService.getAndMarkAsRead(notificationId);
+    return notificationOpt
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
+}
 }

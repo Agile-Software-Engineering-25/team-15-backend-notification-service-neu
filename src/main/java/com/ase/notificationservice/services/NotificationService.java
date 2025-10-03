@@ -83,6 +83,23 @@ public class NotificationService {
     return notificationOpt;
   }
 
+    /**
+   * Retrieves a notification and marks it as unread in a single transaction.
+   *
+   * @param id the ID of the notification to retrieve and mark as read
+   * @return an Optional containing the notification if found, empty otherwise
+   */
+  @Transactional
+  public Optional<Notification> getAndMarkAsUnread(String id) {
+    Optional<Notification> notificationOpt
+        = notificationRepository.findById(id);
+    notificationOpt.ifPresent(notification -> {
+      notification.setReadAt(null);
+      notificationRepository.save(notification);
+    });
+    return notificationOpt;
+  }
+
   @Transactional
   public Notification createNotification(Notification notification) {
     log.info("Notification to publish: {}", notification);
