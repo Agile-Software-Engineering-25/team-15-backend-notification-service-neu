@@ -9,7 +9,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.event.EventListener;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ase.notificationservice.DummyData;
 import com.ase.notificationservice.config.RepositoryConfig;
+import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.repositories.NotificationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,13 +36,8 @@ public class NotificationService {
 
   private final NotificationRepository notificationRepository;
   private final RepositoryConfig repositoryConfig;
+  private final UserServiceConfig userServiceConfig;
   private final SimpMessagingTemplate messagingTemplate;
-
-  @Value("${userservice.url:http://localhost:8081}")
-  private String userServiceUrl;
-
-  @Value("${userservice.groups-enabled:false}")
-  private boolean groupsEnabled;
 
   private final HttpClient httpClient = HttpClient.newHttpClient();
   private final ObjectMapper objectMapper = new ObjectMapper();
@@ -151,16 +146,18 @@ public class NotificationService {
    *
    * @param groupId the group ID
    * @return list of user IDs in the group
+   * @throws IllegalStateException if group notifications are disabled
+   * @throws RuntimeException if the group service request fails
    */
   public List<String> getUsersInGroup(final String groupId) {
-    if (!groupsEnabled) {
-      log.warn("Group notifications are disabled. Group ID: {}", groupId);
-      return new ArrayList<>();
+    if (!userServiceConfig.isGroupsEnabled()) {
+      throw new IllegalStateException(
+          "Group notifications are disabled. Group ID: " + groupId);
     }
 
     try {
       // Change "/groups/getusers/" if the actual API endpoint is different
-      String url = userServiceUrl + "/groups/getusers/" + groupId;
+      String url = userServiceConfig.getUrl() + "/groups/getusers/" + groupId;
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
@@ -174,14 +171,14 @@ public class NotificationService {
       if (response.statusCode() == httpOk) {
         return parseUserIds(response.body());
       }
-      log.warn("Failed to fetch users for group {}: HTTP {}",
-          groupId, response.statusCode());
-      return new ArrayList<>();
+      throw new RuntimeException(
+          "Failed to fetch users for group " + groupId
+          + ": HTTP " + response.statusCode());
     }
     catch (IOException | InterruptedException e) {
-      log.error("Error fetching users for group {}: {}",
-          groupId, e.getMessage());
-      return new ArrayList<>();
+      throw new RuntimeException(
+          "Error fetching users for group " + groupId + ": " + e.getMessage(),
+          e);
     }
   }
 
