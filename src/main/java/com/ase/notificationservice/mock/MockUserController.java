@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class MockUserController {
-  record UserResp(String id, String email) {}
+  record UserResponse(String id, String email) {}
 
   @GetMapping("/{id}")
-  public UserResp getUser(@PathVariable String id) {
-    return new UserResp(id,"example@example.com");
+  public UserResponse getUser(@PathVariable String id) {
+    return new UserResponse(id, "example@example.com");
   }
 }

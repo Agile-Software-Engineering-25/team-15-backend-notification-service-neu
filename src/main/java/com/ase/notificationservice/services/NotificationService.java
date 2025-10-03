@@ -131,8 +131,10 @@ public class NotificationService {
       if (TransactionSynchronizationManager.isSynchronizationActive()) {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
           @Override public void afterCommit() { sendEmailInline(saved); }
-        });
-      } else {
+        }
+        );
+      }
+      else {
         sendEmailInline(saved);
       }
     }
@@ -180,7 +182,8 @@ public class NotificationService {
     try {
       emailService.sendEmail(req);
       log.info("Sent email for notification {}", notification.getId());
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new IllegalStateException("Failed to send email for " + notification.getId(), e);
     }
   }
