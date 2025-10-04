@@ -3,7 +3,7 @@ package com.ase.notificationservice.mock;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
-@Profile("mock-users")
+@Profile("mock")
 @RestController
 @RequestMapping("/users")
 public class MockUserController {

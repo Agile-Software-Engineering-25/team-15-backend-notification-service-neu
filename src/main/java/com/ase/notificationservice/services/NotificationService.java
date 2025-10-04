@@ -25,7 +25,7 @@ import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationTypes;
+import com.ase.notificationservice.enums.NotifyType;
 import com.ase.notificationservice.repositories.NotificationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,7 +114,24 @@ public class NotificationService {
     return notificationOpt;
   }
 
-  /**
+   /**
+   * Retrieves a notification and marks it as unread in a single transaction.
+   *
+   * @param id the ID of the notification to retrieve and mark as read
+   * @return an Optional containing the notification if found, empty otherwise
+   */
+  @Transactional
+  public Optional<Notification> getAndMarkAsUnread(String id) {
+    Optional<Notification> notificationOpt
+        = notificationRepository.findById(id);
+    notificationOpt.ifPresent(notification -> {
+      notification.setReadAt(null);
+      notificationRepository.save(notification);
+    });
+    return notificationOpt;
+  }
+
+   /**
    * Creates and publishes a notification.
    *
    * @param notification the notification to create
@@ -205,8 +222,8 @@ public class NotificationService {
   }
 
   private boolean shouldSendMail(Notification n) {
-    return Objects.equals(n.getNotificationType(), NotificationTypes.Mail.toString())
-        || Objects.equals(n.getNotificationType(), NotificationTypes.All.toString());
+    return Objects.equals(n.getNotifyType(), NotifyType.Mail)
+        || Objects.equals(n.getNotifyType(), NotifyType.All);
   }
 
   /**

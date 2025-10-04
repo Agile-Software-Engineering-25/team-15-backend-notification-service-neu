@@ -7,12 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
 /**
  * Entity class representing a notification in the system.
  */
@@ -51,7 +52,10 @@ public class Notification {
   private String shortDescription;
 
   @Column
-  private String notificationType;
+  private NotifyType notifyType;
+
+  @Column
+  private NotificationType notificationType;
 }
 
 
