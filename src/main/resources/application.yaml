@@ -22,8 +22,6 @@ spring:
     port: 587
     fromAddress: noreply@sau-portal.de
     fromName: Notification Service
-    username: ${SPRING_MAIL_USERNAME:}
-    password: ${SPRING_MAIL_PASSWORD:}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
