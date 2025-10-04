@@ -21,3 +21,7 @@ user-service:
   url: https://sau-portal.de  # Change production base URL if needed
   groups-enabled: false  # Set to true when API is ready
   timeout-ms: 2000
+
+app:
+  repository:
+    initialize-with-dummy-data: false
