@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="default" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="mock-users" />
+    <envs>
+      <env name="SPRING_MAIL_USERNAME" value="noreply@sau-portal.de" />
+      <env name="SPRING_MAIL_PASSWORD" value="T8Ci]dUe}KHN__2" />
+    </envs>
+    <module name="userservice" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.ase.notificationservice.Application" />
+    <method v="2" />
+  </configuration>
+</component>

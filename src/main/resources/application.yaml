@@ -17,6 +17,16 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
+  mail:
+    host: smtp.strato.de
+    port: 587
+    fromAddress: noreply@sau-portal.de
+    fromName: Notification Service
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 server:
   error:
     include-message: always
@@ -25,6 +35,8 @@ server:
 app:
   repository:
     initialize-with-dummy-data: true
+  mail:
+    defaultFrom: "noreply@sau-portal.de"
 springdoc:
   api-docs:
     path: /api-docs
@@ -44,3 +56,7 @@ cors:
   allowed-origins:
     - http://localhost:5173
     - https://sau-portal.de
+user-service:
+  url: http://localhost:8080/api/v1  # Change base URL if needed (local dev)
+  groups-enabled: false  # Set to true when API is ready
+  timeout-ms: 2000
