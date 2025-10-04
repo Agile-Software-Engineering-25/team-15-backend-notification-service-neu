@@ -30,19 +30,25 @@ cd notificationservice
 mvn clean install
 ```
 
-### Setting Variables
-
-- create a ```.env``` file in the root of your repository
-    - add the following variables to it:
-      ```SPRING_MAIL_USERNAME```
-      ```SPRING_MAIL_PASSWORD```
-- if the ```.env``` file is set up run this command:
-  ```export $(grep -v '^#' .env | xargs)```bash
-
 ### Run the Application
 
+#### Prepare mock profile
+
+You need to use the mock profile for local use.
+
+Add a `application-mock.properties` file in `src/main/resources` with the following content:
+
+```properties
+spring:
+    mail:
+        username: email-adress
+        password: password
+```
+
+#### Run
+
 ```bash
-mvn spring-boot:run
+mvn spring-boot:run -D"spring-boot.run.arguments=--spring.profiles.active=mock"
 ```
 
 The application will start on http://localhost:8080
