@@ -5,6 +5,7 @@ import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 
+@SuppressWarnings({"checkstyle:MagicNumber", "checkstyle:LineLength"})
 public class DummyData {
 
   public static final List<Notification> NOTIFICATIONS = List.of(
@@ -39,7 +40,7 @@ public class DummyData {
           .userId("1")
           .message("Test Notification 4")
           .title("Test Notification 4")
-          .shortDescription("This is a short description of my  slightly longer notification that does not fit on the screen 4")
+          .shortDescription("This is a short description of my slightly longer notification that does not fit on the screen 4")
           .notifyType(NotifyType.All)
           .notificationType(NotificationType.None)
           .receivedAt(java.time.Instant.now().minus( java.time.Duration.ofMinutes(60)))
@@ -48,7 +49,7 @@ public class DummyData {
           .userId("1")
           .message("Test Notification 5")
           .title("Test Notification 5")
-          .shortDescription("This is a short description of my  slightly longer notification that does not fit on the screen 5")
+          .shortDescription("This is a short description of my slightly longer notification that does not fit on the screen 5")
           .notifyType(NotifyType.All)
           .notificationType(NotificationType.Info)
           .receivedAt(java.time.Instant.now().minus( java.time.Duration.ofMinutes(120)))
@@ -57,7 +58,7 @@ public class DummyData {
           .userId("1")
           .message("Test Notification 6")
           .title("Test Notification 6")
-          .shortDescription("This is a short description of my  slightly longer notification that does not fit on the screen 6")
+          .shortDescription("This is a short description of my slightly longer notification that does not fit on the screen 6")
           .notifyType(NotifyType.All)
           .notificationType(NotificationType.Info)
           .receivedAt(java.time.Instant.now().minus( java.time.Duration.ofDays(1)))

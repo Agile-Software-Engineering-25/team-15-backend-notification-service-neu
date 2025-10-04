@@ -76,19 +76,24 @@ public class NotificationController {
     return ResponseEntity.ok(notifications);
   }
 
-@PostMapping("/mark-as-unread/{notificationId}")
-public ResponseEntity<Notification> markAsUnread(@PathVariable String notificationId) {
-    Optional<Notification> notificationOpt = notificationService.getAndMarkAsUnread(notificationId);
+  @PostMapping("/mark-as-unread/{notificationId}")
+  public ResponseEntity<Notification> markAsUnread(@PathVariable String notificationId) {
+    Optional<Notification> notificationOpt =
+        notificationService.getAndMarkAsUnread(notificationId);
     return notificationOpt
         .map(ResponseEntity::ok)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
-}
+          .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found")
+        );
+  }
 
-@PostMapping("/mark-as-read/{notificationId}")
-public ResponseEntity<Notification> markAsRead(@PathVariable String notificationId) {
+  @PostMapping("/mark-as-read/{notificationId}")
+  public ResponseEntity<Notification> markAsRead(@PathVariable String notificationId) {
     Optional<Notification> notificationOpt = notificationService.getAndMarkAsRead(notificationId);
     return notificationOpt
-        .map(ResponseEntity::ok)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
-}
+      .map(ResponseEntity::ok)
+      .orElseThrow(
+          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found")
+      );
+  }
 }
