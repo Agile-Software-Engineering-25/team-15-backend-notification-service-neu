@@ -52,13 +52,17 @@ public class NotificationController {
           allUsers.addAll(usersInGroup);
         }
       }
-    } catch (IllegalStateException e) {
+    }
+    catch (IllegalStateException e)
+    {
       return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
     }
 
     Instant receivedTimestamp = Instant.now();
-    Optional<EmailTemplate> emailTemplate = Optional.ofNullable(notificationCreationDto.getEmailTemplate());
-    Optional<Map<String, Object>> variables = Optional.ofNullable(notificationCreationDto.getVariables());
+    Optional<EmailTemplate> emailTemplate = Optional.
+        ofNullable(notificationCreationDto.getEmailTemplate());
+    Optional<Map<String, Object>> variables = Optional.
+        ofNullable(notificationCreationDto.getVariables());
     for (String user : allUsers.stream().distinct().toList()) {
       Notification notification = Notification.builder()
           .userId(user)

@@ -159,7 +159,9 @@ public class NotificationService {
             sendEmailInline(saved, emailTemplate, variables);
           }
         });
-      } else {
+      }
+      else
+      {
         sendEmailInline(saved, emailTemplate, variables);
       }
     }
@@ -199,9 +201,11 @@ public class NotificationService {
 
     String email = fetchUserEmail(notification.getUserId())
         .filter(s -> !s.isBlank())
-        .orElseThrow(() -> new IllegalStateException("No email found for userId=" + notification.getUserId()));
+        .orElseThrow(() ->
+            new IllegalStateException("No email found for userId=" + notification.getUserId()));
 
-    EmailTemplate chosenTemplate = emailTemplateOptional.orElseGet(() -> resolveTemplate(notification));
+    EmailTemplate chosenTemplate = emailTemplateOptional.orElseGet(() ->
+        resolveTemplate(notification));
 
     Map<String, Object> defaults = buildDefaultVariables(notification);
     Map<String, Object> vars = new java.util.HashMap<>(defaults);
@@ -227,7 +231,9 @@ public class NotificationService {
     try {
       emailService.sendEmail(req);
       log.info("Sent email for notification {}", notification.getId());
-    } catch (Exception e) {
+    }
+    catch (Exception e)
+    {
       throw new IllegalStateException("Failed to send email for " + notification.getId(), e);
     }
   }
@@ -243,7 +249,9 @@ public class NotificationService {
           .timeout(Duration.ofMillis(userServiceConfig.getTimeoutMs()))
           .block();
       return Optional.ofNullable(resp != null ? resp.email() : null);
-    } catch (Exception e) {
+    }
+    catch (Exception e)
+    {
       log.warn("UserService lookup failed for {}: {}", userId, e.toString());
       return Optional.empty();
     }
@@ -287,7 +295,9 @@ public class NotificationService {
       throw new RuntimeException(
           "Failed to fetch users for group " + groupId
               + ": HTTP " + response.statusCode());
-    } catch (IOException | InterruptedException e) {
+    }
+    catch (IOException | InterruptedException e)
+    {
       throw new RuntimeException(
           "Error fetching users for group " + groupId + ": " + e.getMessage(),
           e);
@@ -302,7 +312,7 @@ public class NotificationService {
     List<String> userIds = new ArrayList<>();
     try {
       JsonNode rootNode = objectMapper.readTree(jsonResponse);
-      
+
       if (rootNode.isArray()) {
         for (JsonNode element : rootNode) {
           if (element.isTextual()) {
@@ -310,7 +320,9 @@ public class NotificationService {
           }
         }
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e)
+    {
       log.error("Error parsing user IDs from response: {}", e.getMessage());
     }
     return userIds;

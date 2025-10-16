@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -50,7 +50,9 @@ public class EmailService {
 
       if (fromName != null && !fromName.isBlank()) {
         helper.setFrom(fromAddress.trim(), fromName);
-      } else {
+      }
+      else
+      {
         helper.setFrom(fromAddress.trim());
       }
 
