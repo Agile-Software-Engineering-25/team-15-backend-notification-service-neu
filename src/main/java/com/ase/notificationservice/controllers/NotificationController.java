@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.ase.notificationservice.dtos.NotificationCreationDto;
 import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.EmailTemplate;
 import com.ase.notificationservice.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +52,13 @@ public class NotificationController {
           allUsers.addAll(usersInGroup);
         }
       }
-    }
-    catch (IllegalStateException e) {
+    } catch (IllegalStateException e) {
       return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
     }
 
     Instant receivedTimestamp = Instant.now();
-
+    Optional<EmailTemplate> emailTemplate = Optional.ofNullable(notificationCreationDto.getEmailTemplate());
+    Optional<Map<String, Object>> variables = Optional.ofNullable(notificationCreationDto.getVariables());
     for (String user : allUsers.stream().distinct().toList()) {
       Notification notification = Notification.builder()
           .userId(user)
@@ -69,7 +71,7 @@ public class NotificationController {
           .notificationType(notificationCreationDto.getNotificationType())
           .build();
 
-      created.add(notificationService.createNotification(notification));
+      created.add(notificationService.createNotification(notification, emailTemplate, variables));
     }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -89,7 +91,7 @@ public class NotificationController {
         notificationService.getAndMarkAsUnread(notificationId);
     return notificationOpt
         .map(ResponseEntity::ok)
-          .orElseThrow(
+        .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found")
         );
   }
@@ -98,10 +100,10 @@ public class NotificationController {
   public ResponseEntity<Notification> markAsRead(@PathVariable String notificationId) {
     Optional<Notification> notificationOpt = notificationService.getAndMarkAsRead(notificationId);
     return notificationOpt
-      .map(ResponseEntity::ok)
-      .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found")
-      );
+        .map(ResponseEntity::ok)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found")
+        );
   }
 
 }

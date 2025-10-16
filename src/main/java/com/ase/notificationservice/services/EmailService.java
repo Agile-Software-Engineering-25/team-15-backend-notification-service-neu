@@ -40,6 +40,9 @@ public class EmailService {
   @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1500, multiplier = 2.0))
   public void sendEmail(@NonNull EmailNotificationRequestDto req)
       throws MessagingException, UnsupportedEncodingException {
+    if (req.to() == null || req.to().isEmpty()) {
+      throw new IllegalArgumentException("No recipients provided");
+    }
     for (String recipient : req.to()) {
       MimeMessage message = mailSender.createMimeMessage();
       MimeMessageHelper helper =

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.w3.org/1999/xhtml">
+<body style="margin:0;padding:0;background:#f2f7ff;font-family:Arial,Helvetica,sans-serif;">
+<!-- PREHEADER (hidden in most clients, but improves previews) -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+    <!-- th:text fills preview text; keep short -->
+    <span th:text="${preheader != null ? preheader : ''}"></span>
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+</div>
+
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+    <tr>
+        <td align="center" style="padding:24px;">
+            <table cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;border-radius:10px;"
+                   width="600">
+                <!-- Header -->
+                <tr>
+                    <td style="padding:20px 24px;">
+                        <!-- Optional logo -->
+                        <div th:if="${logoUrl}">
+                            <img alt="Logo" height="36" style="display:block;border:0;line-height:100%;outline:0;" th:src="${logoUrl}"
+                                 width="140">
+                        </div>
+
+                        <h2 style="margin:16px 0;color:#000;font-size:24px;"
+                            th:text="${header != null ? header : 'Benachrichtigung'}">
+                            Benachrichtigung
+                        </h2>
+
+                        <!-- Greeting -->
+                        <p style="margin:0 0 16px 0;color:#000;font-size:16px;">
+                            Hallo <strong th:text="${name != null ? name : 'Nutzer/in'}">Nutzer/in</strong>,
+                        </p>
+
+                        <!-- Body paragraphs -->
+                        <div th:if="${body != null}">
+                            <p style="margin:0 0 16px 0;color:#000;font-size:16px;" th:each="p : ${body}"
+                               th:text="${p}">
+                                Absatz
+                            </p>
+                        </div>
+
+                        <!-- Optional highlight line (e.g., assignment + deadline) -->
+                        <p style="margin:0 0 16px 0;color:#000;font-size:16px;" th:if="${highlightLine}"
+                           th:text="${highlightLine}"></p>
+
+                        <!-- Optional key/value list (e.g., Course / Grade) -->
+                        <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 0 16px 0;" th:if="${facts}"
+                               width="100%">
+                            <tr th:each="f : ${facts}">
+                                <td style="font-size:16px;color:#000;padding:4px 0;width:40%;"><strong
+                                        th:text="${f.key}">Feld</strong></td>
+                                <td style="font-size:16px;color:#000;padding:4px 0;" th:text="${f.value}">Wert</td>
+                            </tr>
+                        </table>
+
+                        <!-- Primary CTA -->
+                        <div th:if="${ctaUrl}">
+                            <a style="display:inline-block;padding:12px 20px;border-radius:10px;background:#002e6d;color:#fff;text-decoration:none;"
+                               th:href="${ctaUrl}">
+                                <span th:text="${ctaLabel != null ? ctaLabel : 'Jetzt öffnen'}">Jetzt öffnen</span>
+                            </a>
+                        </div>
+
+                        <!-- Secondary links -->
+                        <div style="margin-top:12px;" th:if="${secondaryLinks}">
+                            <a style="display:inline-block;margin-right:12px;font-size:14px;color:#15637e;text-decoration:underline;"
+                               th:each="l : ${secondaryLinks}"
+                               th:href="${l.url}"
+                               th:text="${l.label}">Weitere Info</a>
+                        </div>
+
+                        <!-- Notes / disclaimer -->
+                        <p style="margin:16px 0 0 0;font-size:14px;color:#555;" th:if="${note}" th:text="${note}"></p>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="padding:12px 24px;background:#f2f7ff;border-radius:0 0 10px 10px;text-align:center;font-size:14px;color:#000;">
+                <span th:text="${footer != null ? footer : 'SAU (Student Assistance Utilities)'}">
+                  SAU (Student Assistance Utilities)
+                </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
