@@ -51,8 +51,7 @@ public class EmailService {
       if (fromName != null && !fromName.isBlank()) {
         helper.setFrom(fromAddress.trim(), fromName);
       }
-      else
-      {
+      else {
         helper.setFrom(fromAddress.trim());
       }
 

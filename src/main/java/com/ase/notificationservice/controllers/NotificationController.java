@@ -53,8 +53,7 @@ public class NotificationController {
         }
       }
     }
-    catch (IllegalStateException e)
-    {
+    catch (IllegalStateException e) {
       return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
     }
 

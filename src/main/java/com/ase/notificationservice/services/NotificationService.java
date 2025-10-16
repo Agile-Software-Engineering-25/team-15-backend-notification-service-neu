@@ -160,8 +160,7 @@ public class NotificationService {
           }
         });
       }
-      else
-      {
+      else {
         sendEmailInline(saved, emailTemplate, variables);
       }
     }
@@ -232,8 +231,7 @@ public class NotificationService {
       emailService.sendEmail(req);
       log.info("Sent email for notification {}", notification.getId());
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
       throw new IllegalStateException("Failed to send email for " + notification.getId(), e);
     }
   }
@@ -250,8 +248,7 @@ public class NotificationService {
           .block();
       return Optional.ofNullable(resp != null ? resp.email() : null);
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
       log.warn("UserService lookup failed for {}: {}", userId, e.toString());
       return Optional.empty();
     }
@@ -296,8 +293,7 @@ public class NotificationService {
           "Failed to fetch users for group " + groupId
               + ": HTTP " + response.statusCode());
     }
-    catch (IOException | InterruptedException e)
-    {
+    catch (IOException | InterruptedException e) {
       throw new RuntimeException(
           "Error fetching users for group " + groupId + ": " + e.getMessage(),
           e);
@@ -321,8 +317,7 @@ public class NotificationService {
         }
       }
     }
-    catch (IOException e)
-    {
+    catch (IOException e) {
       log.error("Error parsing user IDs from response: {}", e.getMessage());
     }
     return userIds;
