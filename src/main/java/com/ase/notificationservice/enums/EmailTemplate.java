@@ -6,10 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EmailTemplate {
-  WELCOME("welcome"),
-  RESET_PASSWORD("reset-password"),
-  GENERIC_WITH_CTA("generic-with-cta");
-
+  RESET_PASSWORD("password"),
+  GENERIC("generic-template");
+  
   private final String fileName;
 
 }
