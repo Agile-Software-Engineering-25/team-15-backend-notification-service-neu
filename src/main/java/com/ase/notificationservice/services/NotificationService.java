@@ -27,6 +27,7 @@ import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.enums.EmailTemplate;
+import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 import com.ase.notificationservice.repositories.NotificationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -200,16 +201,29 @@ public class NotificationService {
         .filter(s -> !s.isBlank())
         .orElseThrow(() -> new IllegalStateException("No email found for userId=" + notification.getUserId()));
 
-    EmailTemplate templateToUse = emailTemplateOptional.orElseGet(() -> resolveTemplate(notification));
-    Map<String, Object> variables = variablesOptional.orElse(null);
+    EmailTemplate chosenTemplate = emailTemplateOptional.orElseGet(() -> resolveTemplate(notification));
+
+    Map<String, Object> defaults = buildDefaultVariables(notification);
+    Map<String, Object> vars = new java.util.HashMap<>(defaults);
+    variablesOptional.ifPresent(vars::putAll);
+
+    if (vars.isEmpty()) {
+      vars = null;
+    }
+
+    String subject = java.util.Optional.ofNullable(notification.getTitle()).orElse("Notification");
+    if (notification.isPriority()) {
+      subject = "[PRIORITY] " + subject;
+    }
 
     EmailNotificationRequestDto req = EmailNotificationRequestDto.builder()
-        .to(List.of(email))
-        .subject(notification.getTitle() != null ? notification.getTitle() : "Notification")
-        .text(notification.getMessage() != null ? notification.getMessage() : "")
-        .template(emailTemplateOptional.orElse(null))
-        .variables(variables)
+        .to(java.util.List.of(email))
+        .subject(subject)
+        .text(java.util.Optional.ofNullable(notification.getMessage()).orElse(""))
+        .template(chosenTemplate)
+        .variables(vars)
         .build();
+
     try {
       emailService.sendEmail(req);
       log.info("Sent email for notification {}", notification.getId());
@@ -288,9 +302,7 @@ public class NotificationService {
     List<String> userIds = new ArrayList<>();
     try {
       JsonNode rootNode = objectMapper.readTree(jsonResponse);
-
-      // Update parsing logic if API response format is different
-      // Expected format: ["userId1", "userId2", "userId3"]
+      
       if (rootNode.isArray()) {
         for (JsonNode element : rootNode) {
           if (element.isTextual()) {
@@ -302,5 +314,42 @@ public class NotificationService {
       log.error("Error parsing user IDs from response: {}", e.getMessage());
     }
     return userIds;
+  }
+
+  private Map<String, Object> buildDefaultVariables(Notification n) {
+    Map<String, Object> vars = new java.util.HashMap<>();
+
+    String fallbackHeader = java.util.Optional.ofNullable(n.getTitle()).orElseGet(() -> {
+      return switch (n.getNotificationType()) {
+        case Warning -> "Systemhinweis";
+        case Congratulation -> "Glückwunsch!";
+        case Info -> "Information";
+        case None -> "Benachrichtigung";
+      };
+    });
+    vars.put("header", fallbackHeader);
+
+    if (n.getShortDescription() != null && !n.getShortDescription().isBlank()) {
+      vars.put("preheader", n.getShortDescription());
+    }
+
+    if (n.getMessage() != null && !n.getMessage().isBlank()) {
+      java.util.List<String> paragraphs = java.util.Arrays
+          .stream(n.getMessage().trim().split("\\n\\s*\\n"))
+          .map(String::trim)
+          .filter(s -> !s.isBlank())
+          .toList();
+      if (!paragraphs.isEmpty()) {
+        vars.put("body", paragraphs);
+      }
+    }
+
+    if (n.getNotificationType() == NotificationType.Warning) {
+      vars.put("note", "Wichtige Mitteilung.");
+    }
+
+    vars.putIfAbsent("footer", "SAU (Student Assistance Utilities)");
+
+    return vars;
   }
 }
