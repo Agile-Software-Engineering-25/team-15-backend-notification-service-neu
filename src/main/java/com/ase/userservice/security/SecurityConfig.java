@@ -23,7 +23,8 @@ public class SecurityConfig {
         http
           .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints isnt needed for our purpose since we are not using cookies for auth
           .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/demo").hasRole("DEFAULT-ROLES-SAU")
+            .requestMatchers("/emails").hasRole("Area-4.Team-15.Write.SendNotification")
+            .requestMatchers("/notifications").hasRole("Area-4.Team-15.Write.SendNotification")
             .requestMatchers("/admin/**").hasRole("admin")
             .anyRequest().authenticated())
           .oauth2ResourceServer(oauth2 -> oauth2
