@@ -1,7 +1,7 @@
 // based on this tutorial: https://www.javacodegeeks.com/2025/07/spring-boot-keycloak-role-based-authorization.html
 
 
-package com.ase.userservice.security;
+package com.ase.notificationservice.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

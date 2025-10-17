@@ -1,4 +1,4 @@
-package com.ase.userservice.entities;
+package com.ase.notificationservice.entities;
 
 import java.util.ArrayList;
 
