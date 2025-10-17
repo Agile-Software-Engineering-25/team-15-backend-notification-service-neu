@@ -1,16 +1,19 @@
 spring:
   application:
-    name: ASE-UserService
+    name: ASE-Notification-Service
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
+  h2:
+    console:
+      enabled: true
   datasource:
-    url: jdbc:h2:file:./data/mydb
+    url: jdbc:h2:mem:./data/mydb
     driverClassName: org.h2.Driver
     username: sa
     password: password
@@ -20,7 +23,45 @@ spring:
         jwt:
           issuer-uri: https://keycloak.sau-portal.de/realms/sau
           jwk-set-uri: https://keycloak.sau-portal.de/realms/sau/protocol/openid-connect/certs
+  mail:
+    host: smtp.strato.de
+    port: 587
+    fromAddress: noreply@sau-portal.de
+    fromName: Notification Service
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 server:
   port: 8080
   error:
     include-message: always
+  servlet:
+    context-path: /api/v1
+app:
+  repository:
+    initialize-with-dummy-data: true
+  mail:
+    defaultFrom: "noreply@sau-portal.de"
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,readiness,liveness
+      base-path: /actuator
+  endpoint:
+    health:
+      probes:
+        enabled: true
+cors:
+  allowed-origins:
+    - http://localhost:5173
+    - https://sau-portal.de
+user-service:
+  url: http://localhost:8080/api/v1  # Change base URL if needed (local dev)
+  groups-enabled: false  # Set to true when API is ready
+  timeout-ms: 2000

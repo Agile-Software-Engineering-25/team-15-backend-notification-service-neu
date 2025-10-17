@@ -3,6 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+src/main/resources/application-mock.yaml
 
 ### STS ###
 .apt_generated
@@ -35,3 +36,6 @@ build/
 
 ### MacOs ###
 */.DS_STORE
+
+.env
+.gitignore

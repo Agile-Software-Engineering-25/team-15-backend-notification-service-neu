@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+app:
+  repository:
+    initialize-with-dummy-data: false

@@ -1,16 +1,18 @@
-# Use an official OpenJDK runtime as a parent image
-FROM debian:latest
+# Stage 1: Build
+FROM maven:3.9.5-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package
 
-USER root
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre
 
-# Set the working directory inside the container
-WORKDIR /app 
+WORKDIR /app
 
-COPY ./ ./
+COPY --from=build /app/target/*.jar app.jar
 
-RUN apt-get update && apt-get install -y maven openjdk-21-jdk
-
-RUN  mvn clean install
+ENV SPRING_PROFILES_ACTIVE=default
 EXPOSE 8080
 
-ENTRYPOINT ["mvn", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
