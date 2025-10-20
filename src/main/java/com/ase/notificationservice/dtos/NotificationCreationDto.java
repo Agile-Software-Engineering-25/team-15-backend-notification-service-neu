@@ -1,5 +1,7 @@
 package com.ase.notificationservice.dtos;
 
+import java.util.Map;
+import com.ase.notificationservice.enums.EmailTemplate;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 import lombok.Data;
@@ -14,4 +16,6 @@ public class NotificationCreationDto {
   private String shortDescription;
   private NotifyType notifyType;
   private NotificationType notificationType;
+  private EmailTemplate emailTemplate;
+  private Map<String, Object> variables;
 }

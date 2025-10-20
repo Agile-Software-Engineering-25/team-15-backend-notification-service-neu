@@ -12,7 +12,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -32,10 +31,18 @@ public class EmailService {
   @Value("${spring.mail.fromName:}")
   private String fromName;
 
-  @Async
+  private static String escape(String s) {
+    return s.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;");
+  }
+
   @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1500, multiplier = 2.0))
   public void sendEmail(@NonNull EmailNotificationRequestDto req)
       throws MessagingException, UnsupportedEncodingException {
+    if (req.to() == null || req.to().isEmpty()) {
+      throw new IllegalArgumentException("No recipients provided");
+    }
     for (String recipient : req.to()) {
       MimeMessage message = mailSender.createMimeMessage();
       MimeMessageHelper helper =
@@ -86,18 +93,11 @@ public class EmailService {
     throw new IllegalArgumentException("no content, provide either a template or text");
   }
 
-
   private String resolveText(EmailNotificationRequestDto req, String html) {
     if (req.text() != null && !req.text().isBlank()) {
       return req.text();
     }
     return html.replaceAll("<[^>]+>", "");
-  }
-
-  private static String escape(String s) {
-    return s.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;");
   }
 
   private String injectRecipient(
