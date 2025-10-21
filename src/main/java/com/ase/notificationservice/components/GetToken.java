@@ -28,7 +28,6 @@ public class GetToken {
 
     String url = "client_id=%s&grant_type=client_credentials&client_secret=%s";
 
-    //TODO: add credentials
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create("https://keycloak.sau-portal.de/realms/sau/protocol/openid-connect/token"))
         .POST(BodyPublishers.ofString(String.format(url, clientId, clientSecret)))
@@ -40,7 +39,8 @@ public class GetToken {
     int status = response.statusCode();
     if (status == 200) {
       log.info("Keycloak token endpoint responded with status=200 (OK)");
-    } else {
+    }
+    else {
       String body = response.body();
       String safeBody = body == null ? null : (body.length() > 1000 ? body.substring(0, 1000) + "..." : body);
       log.warn("Keycloak token endpoint error: status={}, body={}", status, safeBody);
