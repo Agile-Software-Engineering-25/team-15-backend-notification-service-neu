@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class EmailController {
 
   private final EmailService emailService;
 
+  @PreAuthorize("hasAuthority('ROLE_AREA-4.TEAM-15.WRITE.SENDNOTIFICATION')")
   @PostMapping()
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void sendEmail(@Valid @RequestBody EmailNotificationRequestDto req)

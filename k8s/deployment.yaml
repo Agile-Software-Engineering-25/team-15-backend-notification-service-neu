@@ -62,3 +62,13 @@ spec:
                 secretKeyRef:
                   name: notification-smtp-secret
                   key: SPRING_MAIL_PASSWORD
+            - name: SECURITY_TOKEN_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: SECURITY_TOKEN_CLIENT_ID
+            - name: SECURITY_TOKEN_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: SECURITY_TOKEN_CLIENT_SECRET

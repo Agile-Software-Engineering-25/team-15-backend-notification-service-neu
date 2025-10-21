@@ -18,6 +18,9 @@ spring:
     username: sa
     password: password
   security:
+    token:
+      client-id: check_teams_for
+      client-secret: info
     oauth2:
       resourceserver:
         jwt:
