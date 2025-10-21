@@ -13,22 +13,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(new JwtAuthConverter());
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+    jwtConverter.setJwtGrantedAuthoritiesConverter(new JwtAuthConverter());
 
 
-        //the role always has to be capitalized
-        http
-          .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints isnt needed for our purpose since we are not using cookies for auth
-          .authorizeHttpRequests(authorize -> authorize
+    //the role always has to be capitalized
+    http
+        .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints isnt needed for our purpose since we are not using cookies for auth
+        .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/demo").hasRole("DEFAULT-ROLES-SAU")
             .requestMatchers("/notifications").hasRole("DEFAULT-ROLES-SAU")
             .requestMatchers("/admin/**").hasRole("admin")
             .anyRequest().authenticated())
-          .oauth2ResourceServer(oauth2 -> oauth2
+        .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter)));
-        return http.build();
-    }
+    return http.build();
+  }
 }

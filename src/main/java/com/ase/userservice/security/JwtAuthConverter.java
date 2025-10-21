@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 
 public class JwtAuthConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
-    @Override
-    public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
-        var roles = jwt.getClaimAsStringList("groups");
+  @Override
+  public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
+    var roles = jwt.getClaimAsStringList("groups");
 
-        // you can check the roles here if you want to
-        //for (String role : roles) {
-        //System.out.println("Role from JWT: " + role);
-        // }
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                .collect(Collectors.toList());
-    }
+    // you can check the roles here if you want to
+    //for (String role : roles) {
+    //System.out.println("Role from JWT: " + role);
+    // }
+    return roles.stream()
+        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+        .collect(Collectors.toList());
+  }
 }
