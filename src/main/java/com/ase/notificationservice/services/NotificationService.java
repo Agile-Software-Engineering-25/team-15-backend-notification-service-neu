@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -25,6 +26,8 @@ import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.EmailTemplate;
+import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 import com.ase.notificationservice.repositories.NotificationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,16 +49,16 @@ public class NotificationService {
   private final UserServiceConfig userServiceConfig;
   private final SimpMessagingTemplate messagingTemplate;
   private final EmailService emailService;
-
+  private final HttpClient httpClient = HttpClient.newHttpClient();
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private WebClient userClient;
+
   @jakarta.annotation.PostConstruct
   void init() {
     userClient = WebClient.builder()
         .baseUrl(userServiceConfig.getUrl())
         .build();
   }
-  private final HttpClient httpClient = HttpClient.newHttpClient();
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   /**
    * Marks a notification as unread by setting its readAt timestamp to null.
@@ -114,7 +117,7 @@ public class NotificationService {
     return notificationOpt;
   }
 
-   /**
+  /**
    * Retrieves a notification and marks it as unread in a single transaction.
    *
    * @param id the ID of the notification to retrieve and mark as read
@@ -131,30 +134,34 @@ public class NotificationService {
     return notificationOpt;
   }
 
-   /**
+  /**
    * Creates and publishes a notification.
    *
    * @param notification the notification to create
    * @return the saved notification
    */
   @Transactional
-  public Notification createNotification(final Notification notification) {
+  public Notification createNotification(final Notification notification,
+                                         final Optional<EmailTemplate> emailTemplate,
+                                         final Optional<Map<String, Object>> variables) {
     log.info("Notification to publish: {}", notification);
     Notification saved = notificationRepository.save(notification);
+
     messagingTemplate.convertAndSend(
         "/topic/notifications/" + notification.getUserId(),
         notificationRepository.findByUserId(notification.getUserId()));
+
     if (shouldSendMail(saved)) {
       if (TransactionSynchronizationManager.isSynchronizationActive()) {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-          @Override public void afterCommit() {
-            sendEmailInline(saved);
+          @Override
+          public void afterCommit() {
+            sendEmailInline(saved, emailTemplate, variables);
           }
-        }
-        );
+        });
       }
       else {
-        sendEmailInline(saved);
+        sendEmailInline(saved, emailTemplate, variables);
       }
     }
     return saved;
@@ -172,7 +179,8 @@ public class NotificationService {
 
     log.info("Inserting {} dummy notifications",
         DummyData.NOTIFICATIONS.size());
-    DummyData.NOTIFICATIONS.forEach(this::createNotification);
+    DummyData.NOTIFICATIONS.forEach(n ->
+        createNotification(n, Optional.empty(), Optional.empty()));
   }
 
   /**
@@ -185,16 +193,40 @@ public class NotificationService {
     return notificationRepository.findByUserId(userId);
   }
 
-  private void sendEmailInline(Notification notification) {
+  private void sendEmailInline(
+      Notification notification,
+      Optional<EmailTemplate> emailTemplateOptional,
+      Optional<Map<String, Object>> variablesOptional) {
+
     String email = fetchUserEmail(notification.getUserId())
         .filter(s -> !s.isBlank())
         .orElseThrow(() ->
             new IllegalStateException("No email found for userId=" + notification.getUserId()));
+
+    EmailTemplate chosenTemplate = emailTemplateOptional.orElseGet(() ->
+        resolveTemplate(notification));
+
+    Map<String, Object> defaults = buildDefaultVariables(notification);
+    Map<String, Object> vars = new java.util.HashMap<>(defaults);
+    variablesOptional.ifPresent(vars::putAll);
+
+    if (vars.isEmpty()) {
+      vars = null;
+    }
+
+    String subject = java.util.Optional.ofNullable(notification.getTitle()).orElse("Notification");
+    if (notification.isPriority()) {
+      subject = "[PRIORITY] " + subject;
+    }
+
     EmailNotificationRequestDto req = EmailNotificationRequestDto.builder()
-        .to(List.of(email))
-        .subject(notification.getTitle() != null ? notification.getTitle() : "Notification")
-        .text(notification.getMessage() != null ? notification.getMessage() : "")
+        .to(java.util.List.of(email))
+        .subject(subject)
+        .text(java.util.Optional.ofNullable(notification.getMessage()).orElse(""))
+        .template(chosenTemplate)
+        .variables(vars)
         .build();
+
     try {
       emailService.sendEmail(req);
       log.info("Sent email for notification {}", notification.getId());
@@ -206,7 +238,8 @@ public class NotificationService {
 
   private Optional<String> fetchUserEmail(String userId) {
     try {
-      record UserResp(String id, String email) {}
+      record UserResp(String id, String email) {
+      }
       UserResp resp = userClient.get()
           .uri("/users/{id}", userId)
           .retrieve()
@@ -232,7 +265,7 @@ public class NotificationService {
    * @param groupId the group ID
    * @return list of user IDs in the group
    * @throws IllegalStateException if group notifications are disabled
-   * @throws RuntimeException if the group service request fails
+   * @throws RuntimeException      if the group service request fails
    */
   public List<String> getUsersInGroup(final String groupId) {
     if (!userServiceConfig.isGroupsEnabled()) {
@@ -258,7 +291,7 @@ public class NotificationService {
       }
       throw new RuntimeException(
           "Failed to fetch users for group " + groupId
-          + ": HTTP " + response.statusCode());
+              + ": HTTP " + response.statusCode());
     }
     catch (IOException | InterruptedException e) {
       throw new RuntimeException(
@@ -267,13 +300,15 @@ public class NotificationService {
     }
   }
 
+  private EmailTemplate resolveTemplate(Notification n) {
+    return EmailTemplate.GENERIC;
+  }
+
   private List<String> parseUserIds(final String jsonResponse) {
     List<String> userIds = new ArrayList<>();
     try {
       JsonNode rootNode = objectMapper.readTree(jsonResponse);
 
-      // Update parsing logic if API response format is different
-      // Expected format: ["userId1", "userId2", "userId3"]
       if (rootNode.isArray()) {
         for (JsonNode element : rootNode) {
           if (element.isTextual()) {
@@ -286,5 +321,42 @@ public class NotificationService {
       log.error("Error parsing user IDs from response: {}", e.getMessage());
     }
     return userIds;
+  }
+
+  private Map<String, Object> buildDefaultVariables(Notification n) {
+    Map<String, Object> vars = new java.util.HashMap<>();
+
+    String fallbackHeader = java.util.Optional.ofNullable(n.getTitle()).orElseGet(() -> {
+      return switch (n.getNotificationType()) {
+        case Warning -> "Systemhinweis";
+        case Congratulation -> "Glückwunsch!";
+        case Info -> "Information";
+        case None -> "Benachrichtigung";
+      };
+    });
+    vars.put("header", fallbackHeader);
+
+    if (n.getShortDescription() != null && !n.getShortDescription().isBlank()) {
+      vars.put("preheader", n.getShortDescription());
+    }
+
+    if (n.getMessage() != null && !n.getMessage().isBlank()) {
+      java.util.List<String> paragraphs = java.util.Arrays
+          .stream(n.getMessage().trim().split("\\n\\s*\\n"))
+          .map(String::trim)
+          .filter(s -> !s.isBlank())
+          .toList();
+      if (!paragraphs.isEmpty()) {
+        vars.put("body", paragraphs);
+      }
+    }
+
+    if (n.getNotificationType() == NotificationType.Warning) {
+      vars.put("note", "Wichtige Mitteilung.");
+    }
+
+    vars.putIfAbsent("footer", "SAU (Student Assistance Utilities)");
+
+    return vars;
   }
 }
