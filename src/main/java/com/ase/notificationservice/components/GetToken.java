@@ -24,7 +24,7 @@ public class GetToken {
   @Value("${spring.security.token.client-id}") String clientId;
   @Value("${spring.security.token.client-secret}") String clientSecret;
 
-  public String makehttpcall() throws IOException, InterruptedException {
+  public String makeHttpCall() throws IOException, InterruptedException {
     HttpClient client = HttpClient.newHttpClient();
 
     String url = "client_id=%s&grant_type=client_credentials&client_secret=%s";
@@ -61,7 +61,7 @@ public class GetToken {
 
   public String getToken()
       throws JsonMappingException, JsonProcessingException, IOException, InterruptedException {
-    return parseJson(makehttpcall());
+    return parseJson(makeHttpCall());
   }
 
 }

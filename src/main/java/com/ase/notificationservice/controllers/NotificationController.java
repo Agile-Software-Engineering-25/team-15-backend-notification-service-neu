@@ -1,11 +1,14 @@
 package com.ase.notificationservice.controllers;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import com.ase.notificationservice.components.GetToken;
+import com.ase.notificationservice.repositories.NotificationRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationController {
 
   private final NotificationService notificationService;
-
   @PreAuthorize("hasAuthority('ROLE_AREA-4.TEAM-15.WRITE.SENDNOTIFICATION')")
   @PostMapping
   public ResponseEntity<?> postNotification(
