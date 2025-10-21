@@ -54,11 +54,9 @@ public class EmailService {
       else {
         helper.setFrom(fromAddress.trim());
       }
-
       if (req.replyTo() != null && !req.replyTo().isBlank()) {
         helper.setReplyTo(req.replyTo());
       }
-
       helper.setTo(recipient);
       helper.setSubject(req.subject());
 

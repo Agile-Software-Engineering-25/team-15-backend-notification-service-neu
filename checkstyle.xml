@@ -8,11 +8,11 @@
     <!-- Define the charset -->
     <property name="charset" value="UTF-8"/>
 
-    <module name="SuppressWarningsFilter" />
+    <module name="SuppressWarningsFilter"/>
 
     <!-- === TreeWalker module processes Java source code === -->
     <module name="TreeWalker">
-        <module name="SuppressWarningsHolder" />
+        <module name="SuppressWarningsHolder"/>
 
 
         <module name="UnusedLocalVariable">
@@ -44,7 +44,8 @@
         </module>
 
         <module name="MemberName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <property name="format"
+                      value="^([a-z][a-zA-Z0-9]*|[a-z]+(_[a-z0-9]+)*)$"/>
         </module>
 
         <!-- Constants: ALL_CAPS with underscores -->

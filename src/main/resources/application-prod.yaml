@@ -12,7 +12,10 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
-
+  security:
+    token:
+      client-id: ${SECURITY_TOKEN_CLIENT_ID}
+      client-secret: ${SECURITY_TOKEN_CLIENT_SECRET}
 server:
   servlet:
     context-path: /notification-service/api/v1

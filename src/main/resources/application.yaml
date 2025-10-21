@@ -17,22 +17,34 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
+  security:
+    token:
+      client-id: check_teams_for
+      client-secret: info
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.sau-portal.de/realms/sau
+          jwk-set-uri: https://keycloak.sau-portal.de/realms/sau/protocol/openid-connect/certs
   mail:
     host: smtp.strato.de
     port: 587
     fromAddress: noreply@sau-portal.de
     fromName: Notification Service
+    username: inserthere
+    password: inserthere
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 server:
+  port: 8080
   error:
     include-message: always
   servlet:
     context-path: /api/v1
 app:
   repository:
-    initialize-with-dummy-data: true
+    initialize-with-dummy-data: false
   mail:
     defaultFrom: "noreply@sau-portal.de"
 springdoc:

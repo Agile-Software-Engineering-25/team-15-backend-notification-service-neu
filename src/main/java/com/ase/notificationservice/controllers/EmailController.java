@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class EmailController {
   private final EmailService emailService;
 
+  @PreAuthorize("hasAuthority('ROLE_AREA-4.TEAM-15.WRITE.SENDNOTIFICATION')")
   @PostMapping(produces = "application/json")
   public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailNotificationRequestDto req) {
     try {
