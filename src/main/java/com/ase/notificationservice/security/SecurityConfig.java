@@ -21,7 +21,7 @@ public class SecurityConfig {
 
     //the role always has to be capitalized
     http
-        .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints isnt needed for our purpose since we are not using cookies for auth
+        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/demo").hasRole("DEFAULT-ROLES-SAU")
             .requestMatchers("/notifications").hasRole("DEFAULT-ROLES-SAU")
