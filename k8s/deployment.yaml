@@ -27,29 +27,8 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "300m"
-          readinessProbe:
-            httpGet:
-              path: /api/v1/actuator/health/readiness
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 24
-          livenessProbe:
-            httpGet:
-              path: /api/v1/actuator/health/liveness
-              port: 8080
-            initialDelaySeconds: 120
-            periodSeconds: 20
-            timeoutSeconds: 2
-            failureThreshold: 3
-          startupProbe:
-            httpGet:
-              path: /api/v1/actuator/health
-              port: 8080
-            periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 30
+            # todo probes überarbeiten
+
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
