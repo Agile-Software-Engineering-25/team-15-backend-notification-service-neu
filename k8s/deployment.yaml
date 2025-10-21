@@ -29,27 +29,22 @@ spec:
               cpu: "300m"
           readinessProbe:
             httpGet:
-              path: /api/v1/actuator/health/readiness
-              port: 8080
-            initialDelaySeconds: 5
+              path: /actuator/health/readiness
+              port: 8081
             periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 24
+            failureThreshold: 12
           livenessProbe:
             httpGet:
-              path: /api/v1/actuator/health/liveness
-              port: 8080
-            initialDelaySeconds: 120
+              path: /actuator/health/liveness
+              port: 8081
             periodSeconds: 20
-            timeoutSeconds: 2
             failureThreshold: 3
           startupProbe:
             httpGet:
-              path: /api/v1/actuator/health
-              port: 8080
+              path: /actuator/health
+              port: 8081
             periodSeconds: 5
-            timeoutSeconds: 2
-            failureThreshold: 30
+            failureThreshold: 20
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
