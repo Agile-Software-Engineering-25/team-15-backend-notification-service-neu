@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MockUserController {
   @GetMapping("/{id}")
   public UserResponse getUser(@PathVariable String id) {
-    return new UserResponse(id, "nekkrause@gmail.com");
+    return new UserResponse(id, "example@example.com");
   }
 
   record UserResponse(String id, String email) {
