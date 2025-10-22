@@ -68,5 +68,5 @@ cors:
     - https://sau-portal.de
 user-service:
   url: http://localhost:8080/api/v1  # Change base URL if needed (local dev)
-  groups-enabled: false  # Set to true when API is ready
+  groups-enabled: true
   timeout-ms: 2000
