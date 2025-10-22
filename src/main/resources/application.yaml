@@ -19,8 +19,8 @@ spring:
     password: password
   security:
     token:
-      client-id: postman-test
-      client-secret: rZMDT4QZkhlMoYzzYsBqmu77scObAfpc
+      client-id: check_teams_for
+      client-secret: info
     oauth2:
       resourceserver:
         jwt:
