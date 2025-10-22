@@ -1,13 +1,7 @@
 package com.ase.notificationservice.services;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,6 +16,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.reactive.function.client.WebClient;
 import com.ase.notificationservice.DummyData;
+import com.ase.notificationservice.components.GetToken;
 import com.ase.notificationservice.config.RepositoryConfig;
 import com.ase.notificationservice.config.UserServiceConfig;
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
@@ -30,8 +25,6 @@ import com.ase.notificationservice.enums.EmailTemplate;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 import com.ase.notificationservice.repositories.NotificationRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,8 +42,7 @@ public class NotificationService {
   private final UserServiceConfig userServiceConfig;
   private final SimpMessagingTemplate messagingTemplate;
   private final EmailService emailService;
-  private final HttpClient httpClient = HttpClient.newHttpClient();
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final GetToken getToken;
   private WebClient userClient;
 
   @jakarta.annotation.PostConstruct
@@ -238,12 +230,26 @@ public class NotificationService {
 
   private Optional<String> fetchUserEmail(String userId) {
     try {
-      record UserResp(String id, String email) {
+      String token = getToken.getToken();
+      
+      record PersonDetailsDto(
+          String id,
+          String dateOfBirth,
+          String address,
+          String phoneNumber,
+          String photoUrl,
+          String username,
+          String firstName,
+          String lastName,
+          String email
+      ) {
       }
-      UserResp resp = userClient.get()
+      
+      PersonDetailsDto resp = userClient.get()
           .uri("/users/{id}", userId)
+          .header("Authorization", "Bearer " + token)
           .retrieve()
-          .bodyToMono(UserResp.class)
+          .bodyToMono(PersonDetailsDto.class)
           .timeout(Duration.ofMillis(userServiceConfig.getTimeoutMs()))
           .block();
       return Optional.ofNullable(resp != null ? resp.email() : null);
@@ -261,66 +267,57 @@ public class NotificationService {
 
   /**
    * Fetches user IDs from a group via the user service API.
+   * Uses the Group API endpoint: GET /api/v1/group/{groupName}
+   * Requires JWT authentication.
    *
-   * @param groupId the group ID
-   * @return list of user IDs in the group
+   * @param groupName the group name (e.g., cohort name)
+   * @return list of user UUIDs in the group
    * @throws IllegalStateException if group notifications are disabled
    * @throws RuntimeException      if the group service request fails
    */
-  public List<String> getUsersInGroup(final String groupId) {
+  public List<String> getUsersInGroup(final String groupName) {
     if (!userServiceConfig.isGroupsEnabled()) {
       throw new IllegalStateException(
-          "Group notifications are disabled. Group ID: " + groupId);
+          "Group notifications are disabled. Group name: " + groupName);
     }
 
     try {
-      // Change "/groups/getusers/" if the actual API endpoint is different
-      String url = userServiceConfig.getUrl() + "/groups/getusers/" + groupId;
-
-      HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .GET()
-          .build();
-
-      HttpResponse<String> response = httpClient.send(request,
-          HttpResponse.BodyHandlers.ofString());
-
-      final int httpOk = 200;
-      if (response.statusCode() == httpOk) {
-        return parseUserIds(response.body());
+      // Get JWT token for authentication
+      String token = getToken.getToken();
+      
+      record StudentDto(String uuid) {
       }
-      throw new RuntimeException(
-          "Failed to fetch users for group " + groupId
-              + ": HTTP " + response.statusCode());
+      record GroupDto(String name, Integer students_count, java.util.List<StudentDto> students) {
+      }
+
+      GroupDto groupDto = userClient.get()
+          .uri("/group/{groupName}", groupName)
+          .header("Authorization", "Bearer " + token)
+          .retrieve()
+          .bodyToMono(GroupDto.class)
+          .timeout(Duration.ofMillis(userServiceConfig.getTimeoutMs()))
+          .block();
+
+      if (groupDto == null || groupDto.students() == null) {
+        log.warn("Group '{}' not found or has no students", groupName);
+        return java.util.Collections.emptyList();
+      }
+
+      return groupDto.students().stream()
+          .map(StudentDto::uuid)
+          .filter(java.util.Objects::nonNull)
+          .toList();
     }
-    catch (IOException | InterruptedException e) {
+    catch (Exception e) {
+      log.error("Error fetching users for group '{}': {}", groupName, e.getMessage());
       throw new RuntimeException(
-          "Error fetching users for group " + groupId + ": " + e.getMessage(),
+          "Failed to fetch users for group " + groupName + ": " + e.getMessage(),
           e);
     }
   }
 
   private EmailTemplate resolveTemplate(Notification n) {
     return EmailTemplate.GENERIC;
-  }
-
-  private List<String> parseUserIds(final String jsonResponse) {
-    List<String> userIds = new ArrayList<>();
-    try {
-      JsonNode rootNode = objectMapper.readTree(jsonResponse);
-
-      if (rootNode.isArray()) {
-        for (JsonNode element : rootNode) {
-          if (element.isTextual()) {
-            userIds.add(element.asText());
-          }
-        }
-      }
-    }
-    catch (IOException e) {
-      log.error("Error parsing user IDs from response: {}", e.getMessage());
-    }
-    return userIds;
   }
 
   private Map<String, Object> buildDefaultVariables(Notification n) {
