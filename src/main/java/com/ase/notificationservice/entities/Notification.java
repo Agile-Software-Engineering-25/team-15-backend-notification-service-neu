@@ -1,6 +1,7 @@
 package com.ase.notificationservice.entities;
 
 import java.time.Instant;
+import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,7 +31,7 @@ public class Notification {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column
-  private String id;
+  private UUID id;
 
   @Column
   private String userId;
