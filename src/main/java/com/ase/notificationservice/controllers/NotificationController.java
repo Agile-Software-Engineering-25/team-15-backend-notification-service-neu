@@ -48,14 +48,19 @@ public class NotificationController {
 
     try {
       if (notificationCreationDto.getGroups() != null) {
-        for (String groupId : notificationCreationDto.getGroups()) {
-          List<String> usersInGroup = notificationService.getUsersInGroup(groupId);
+        for (String groupName : notificationCreationDto.getGroups()) {
+          List<String> usersInGroup = notificationService.getUsersInGroup(groupName);
           allUsers.addAll(usersInGroup);
         }
       }
     }
     catch (IllegalStateException e) {
       return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(e.getMessage());
+    }
+    catch (RuntimeException e) {
+      log.error("Failed to fetch users from groups: {}", e.getMessage(), e);
+      return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+          .body("Failed to fetch users from group service: " + e.getMessage());
     }
 
     Instant receivedTimestamp = Instant.now();
