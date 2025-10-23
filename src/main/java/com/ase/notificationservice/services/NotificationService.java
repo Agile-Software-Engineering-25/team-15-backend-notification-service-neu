@@ -231,7 +231,7 @@ public class NotificationService {
   private Optional<String> fetchUserEmail(String userId) {
     try {
       String token = getToken.getToken();
-      
+
       record PersonDetailsDto(
           String id,
           String dateOfBirth,
@@ -244,7 +244,7 @@ public class NotificationService {
           String email
       ) {
       }
-      
+
       PersonDetailsDto resp = userClient.get()
           .uri("/users/{id}", userId)
           .header("Authorization", "Bearer " + token)
@@ -267,7 +267,7 @@ public class NotificationService {
 
   /**
    * Fetches user IDs from a group via the user service API.
-   * Uses the Group API endpoint: GET /api/v1/group/{groupName}
+   * Calls: GET {user-service.url}/api/v1/group/{groupName}
    * Requires JWT authentication.
    *
    * @param groupName the group name (e.g., cohort name)
@@ -284,14 +284,14 @@ public class NotificationService {
     try {
       // Get JWT token for authentication
       String token = getToken.getToken();
-      
+
       record StudentDto(String uuid) {
       }
       record GroupDto(String name, Integer students_count, java.util.List<StudentDto> students) {
       }
 
       GroupDto groupDto = userClient.get()
-          .uri("/group/{groupName}", groupName)
+          .uri("/api/v1/group/{groupName}", groupName)
           .header("Authorization", "Bearer " + token)
           .retrieve()
           .bodyToMono(GroupDto.class)
