@@ -24,7 +24,6 @@ user-service:
   url: https://sau-portal.de/team-11-api
   groups-enabled: true
   timeout-ms: 2000
-
 app:
   repository:
     initialize-with-dummy-data: false
