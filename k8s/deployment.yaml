@@ -27,22 +27,6 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "300m"
-          readinessProbe:
-            httpGet:
-              path: /notification-service/api/v1
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 6
-          livenessProbe:
-            httpGet:
-              path: /notification-service/api/v1
-              port: 8080
-            initialDelaySeconds: 90
-            periodSeconds: 20
-            timeoutSeconds: 3
-            failureThreshold: 6
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
