@@ -23,6 +23,7 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/**/actuator/health/**", "/**/actuator/info").permitAll()
             .requestMatchers("/emails").hasRole("Area-4.Team-15.Write.SendNotification")
             .requestMatchers("/notifications").hasRole("Area-4.Team-15.Write.SendNotification")
             .requestMatchers("/admin/**").hasRole("admin")
