@@ -28,17 +28,17 @@ public class EmailController {
     try {
       emailService.sendEmail(req);
       return ResponseEntity.noContent().build();
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-    }
-    catch (MailAuthenticationException e) {
+    } catch (MailAuthenticationException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(Map.of("error", "SMTP authentication failed"));
-    }
-    catch (MessagingException | UnsupportedEncodingException e) {
+    } catch (MessagingException | UnsupportedEncodingException e) {
       return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
           .body(Map.of("error", "Mail server error"));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Internal server error: " + e.getMessage()));
     }
   }
 }
