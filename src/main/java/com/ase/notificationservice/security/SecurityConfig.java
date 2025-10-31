@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,10 +27,16 @@ public class SecurityConfig {
             .requestMatchers("/actuator/health/**", "/actuator/info").permitAll()
             .requestMatchers("/demo").hasRole("DEFAULT-ROLES-SAU")
             .requestMatchers("/notifications").hasRole("DEFAULT-ROLES-SAU")
+            .requestMatchers("/ws/**").permitAll()
             .requestMatchers("/admin/**").hasRole("admin")
             .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter)));
     return http.build();
+  }
+
+  @Bean
+  public BearerTokenResolver bearerTokenResolver() {
+    return new QueryParameterBearerTokenResolver();
   }
 }
