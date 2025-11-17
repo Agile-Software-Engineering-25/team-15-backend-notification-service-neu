@@ -26,7 +26,8 @@ class EmailControllerWebLayerTest {
   @Disabled("EmailController tests require spring-security-test dependency")
   void emailControllerTestsRequireSecurityTestDependency() {
     // Placeholder test to document the missing dependency issue
-    // EmailController has @PreAuthorize annotations that cannot be bypassed without proper test setup
+    // EmailController has @PreAuthorize annotations that cannot be bypassed without
+    // proper test setup
     
     /* Example of what the tests would look like with proper dependencies:
     

@@ -1,12 +1,16 @@
 package com.ase.notificationservice.controllers;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.services.NotificationService;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -19,10 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.services.NotificationService;
 
 /**
  * Unit tests for NotificationController without security.
@@ -40,7 +40,7 @@ class NotificationControllerNoSecurityTest {
   private NotificationService notificationService;
 
   @Test
-  void getNotifications_withValidUserId_shouldReturnNotifications() throws Exception {
+  void getNotificationsWithValidUserIdShouldReturnNotifications() throws Exception {
     // Arrange
     Notification notification = Notification.builder()
         .id("test-id")
@@ -52,7 +52,8 @@ class NotificationControllerNoSecurityTest {
         .notificationType(NotificationType.Info)
         .build();
     
-    when(notificationService.getNotificationsForUser(anyString())).thenReturn(List.of(notification));
+    when(notificationService.getNotificationsForUser(anyString()))
+        .thenReturn(List.of(notification));
 
     // Act & Assert
     mockMvc.perform(get("/notifications").param("userId", "user-123"))
@@ -63,9 +64,10 @@ class NotificationControllerNoSecurityTest {
   }
 
   @Test
-  void getNotifications_withEmptyResult_shouldReturnEmptyArray() throws Exception {
+  void getNotificationsWithEmptyResultShouldReturnEmptyArray() throws Exception {
     // Arrange
-    when(notificationService.getNotificationsForUser(anyString())).thenReturn(Collections.emptyList());
+    when(notificationService.getNotificationsForUser(anyString()))
+        .thenReturn(Collections.emptyList());
 
     // Act & Assert
     mockMvc.perform(get("/notifications").param("userId", "user-123"))
@@ -75,7 +77,7 @@ class NotificationControllerNoSecurityTest {
   }
 
   @Test
-  void markAsRead_withExistingNotification_shouldReturnNotification() throws Exception {
+  void markAsReadWithExistingNotificationShouldReturnNotification() throws Exception {
     // Arrange
     Notification notification = Notification.builder()
         .id("test-id")
@@ -95,7 +97,7 @@ class NotificationControllerNoSecurityTest {
   }
 
   @Test
-  void markAsUnread_withExistingNotification_shouldReturnNotification() throws Exception {
+  void markAsUnreadWithExistingNotificationShouldReturnNotification() throws Exception {
     // Arrange
     Notification notification = Notification.builder()
         .id("test-id")

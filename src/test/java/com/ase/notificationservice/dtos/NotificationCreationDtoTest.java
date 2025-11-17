@@ -2,11 +2,13 @@ package com.ase.notificationservice.dtos;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Map;
-import org.junit.jupiter.api.Test;
 import com.ase.notificationservice.enums.EmailTemplate;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for NotificationCreationDto.
@@ -14,12 +16,12 @@ import com.ase.notificationservice.enums.NotifyType;
 class NotificationCreationDtoTest {
 
   @Test
-  void settersAndGetters_withAllFields_shouldWorkCorrectly() {
+  void settersAndGettersWithAllFieldsShouldWorkCorrectly() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     String[] users = {"user1", "user2", "user3"};
     String[] groups = {"group1", "group2"};
-    Map<String, Object> variables = Map.of("key1", "value1", "key2", 42);
+    Map<String, Object> variables = Map.of("key1", "value1", "key2", 42 /* test value */);
 
     // Act
     dto.setUsers(users);
@@ -47,7 +49,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void defaultValues_shouldBeCorrect() {
+  void defaultValuesShouldBeCorrect() {
     // Act
     NotificationCreationDto dto = new NotificationCreationDto();
 
@@ -65,7 +67,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setUsers_withEmptyArray_shouldWork() {
+  void setUsersWithEmptyArrayShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     String[] emptyUsers = {};
@@ -79,7 +81,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setGroups_withSingleGroup_shouldWork() {
+  void setGroupsWithSingleGroupShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     String[] singleGroup = {"single-group"};
@@ -94,7 +96,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setVariables_withComplexMap_shouldWork() {
+  void setVariablesWithComplexMapShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     Map<String, Object> complexVariables = Map.of(
@@ -116,7 +118,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setNotificationType_withAllTypes_shouldWork() {
+  void setNotificationTypeWithAllTypesShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
 
@@ -135,7 +137,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setNotifyType_withAllTypes_shouldWork() {
+  void setNotifyTypeWithAllTypesShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
 
@@ -151,7 +153,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setEmailTemplate_withAllTemplates_shouldWork() {
+  void setEmailTemplateWithAllTemplatesShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
 
@@ -164,7 +166,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setPriority_withTrueAndFalse_shouldWork() {
+  void setPriorityWithTrueAndFalseShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
 
@@ -177,7 +179,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setTitle_withLongString_shouldWork() {
+  void setTitleWithLongStringShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     String longTitle = "This is a very long title that might be used for notifications "
@@ -191,7 +193,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void setMessage_withMultilineString_shouldWork() {
+  void setMessageWithMultilineStringShouldWork() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     String multilineMessage = """
@@ -209,7 +211,7 @@ class NotificationCreationDtoTest {
   }
 
   @Test
-  void toString_shouldIncludeFields() {
+  void toStringShouldIncludeFields() {
     // Arrange
     NotificationCreationDto dto = new NotificationCreationDto();
     dto.setTitle("ToString Test");

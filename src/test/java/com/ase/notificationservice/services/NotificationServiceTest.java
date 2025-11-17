@@ -10,6 +10,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.notificationservice.config.RepositoryConfig;
+import com.ase.notificationservice.config.UserServiceConfig;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.repositories.NotificationRepository;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import com.ase.notificationservice.config.RepositoryConfig;
-import com.ase.notificationservice.config.UserServiceConfig;
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.repositories.NotificationRepository;
 
 /**
  * Unit tests for NotificationService.
@@ -67,7 +68,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void markAsUnread_withExistingNotification_shouldReturnTrue() {
+  void markAsUnreadWithExistingNotificationShouldReturnTrue() {
     // Arrange
     when(notificationRepository.findById("test-id"))
         .thenReturn(Optional.of(testNotification));
@@ -85,7 +86,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void markAsUnread_withNonExistentNotification_shouldReturnFalse() {
+  void markAsUnreadWithNonExistentNotificationShouldReturnFalse() {
     // Arrange
     when(notificationRepository.findById("non-existent"))
         .thenReturn(Optional.empty());
@@ -100,7 +101,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void markAsRead_withExistingNotification_shouldReturnTrue() {
+  void markAsReadWithExistingNotificationShouldReturnTrue() {
     // Arrange
     when(notificationRepository.findById("test-id"))
         .thenReturn(Optional.of(testNotification));
@@ -119,7 +120,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void markAsRead_withNonExistentNotification_shouldReturnFalse() {
+  void markAsReadWithNonExistentNotificationShouldReturnFalse() {
     // Arrange
     when(notificationRepository.findById("non-existent"))
         .thenReturn(Optional.empty());
@@ -134,7 +135,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getAndMarkAsRead_withExistingNotification_shouldReturnNotificationAndMarkAsRead() {
+  void getAndMarkAsReadWithExistingNotificationShouldReturnNotificationAndMarkAsRead() {
     // Arrange
     when(notificationRepository.findById("test-id"))
         .thenReturn(Optional.of(testNotification));
@@ -152,7 +153,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getAndMarkAsUnread_withExistingNotification_shouldReturnNotificationAndMarkAsUnread() {
+  void getAndMarkAsUnreadWithExistingNotificationShouldReturnNotificationAndMarkAsUnread() {
     // Arrange
     testNotification.setReadAt(Instant.now());
     when(notificationRepository.findById("test-id"))
@@ -171,7 +172,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void createNotification_withUINotifyType_shouldNotSendEmail() {
+  void createNotificationWithUINotifyTypeShouldNotSendEmail() {
     // Arrange
     testNotification.setNotifyType(NotifyType.UI);
     when(notificationRepository.save(any(Notification.class)))
@@ -193,7 +194,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getNotificationsForUser_shouldReturnUserNotifications() {
+  void getNotificationsForUserShouldReturnUserNotifications() {
     // Arrange
     List<Notification> expectedNotifications = List.of(testNotification);
     when(notificationRepository.findByUserId("user-123"))
@@ -208,7 +209,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getUsersInGroup_withGroupsDisabled_shouldThrowIllegalStateException() {
+  void getUsersInGroupWithGroupsDisabledShouldThrowIllegalStateException() {
     // Arrange
     when(userServiceConfig.isGroupsEnabled()).thenReturn(false);
 
@@ -222,7 +223,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getAndMarkAsRead_withNonExistentNotification_shouldReturnEmpty() {
+  void getAndMarkAsReadWithNonExistentNotificationShouldReturnEmpty() {
     // Arrange
     when(notificationRepository.findById("non-existent"))
         .thenReturn(Optional.empty());
@@ -237,7 +238,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void getAndMarkAsUnread_withNonExistentNotification_shouldReturnEmpty() {
+  void getAndMarkAsUnreadWithNonExistentNotificationShouldReturnEmpty() {
     // Arrange
     when(notificationRepository.findById("non-existent"))
         .thenReturn(Optional.empty());
@@ -252,7 +253,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void createNotification_shouldSendWebSocketMessage() {
+  void createNotificationShouldSendWebSocketMessage() {
     // Arrange
     when(notificationRepository.save(any(Notification.class)))
         .thenReturn(testNotification);
@@ -270,7 +271,7 @@ class NotificationServiceTest {
   }
 
   @Test
-  void createNotification_withUINotifyType_shouldSendWebSocketOnly() {
+  void createNotificationWithUINotifyTypeShouldSendWebSocketOnly() {
     // Arrange - Test only UI notifications to avoid email service complexity
     testNotification.setNotifyType(NotifyType.UI);
     when(notificationRepository.save(any(Notification.class)))

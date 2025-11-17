@@ -6,6 +6,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ase.notificationservice.services.EmailService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.notificationservice.services.EmailService;
 
 /**
  * Unit tests for EmailController without security.
@@ -33,7 +34,7 @@ class EmailControllerNoSecurityTest {
   private EmailService emailService;
 
   @Test
-  void sendEmail_withValidRequest_shouldReturnNoContent() throws Exception {
+  void sendEmailWithValidRequestShouldReturnNoContent() throws Exception {
     // Arrange
     doNothing().when(emailService).sendEmail(any());
 
@@ -57,7 +58,7 @@ class EmailControllerNoSecurityTest {
   }
 
   @Test
-  void sendEmail_withInvalidRequest_shouldReturnBadRequest() throws Exception {
+  void sendEmailWithInvalidRequestShouldReturnBadRequest() throws Exception {
     // Arrange - Missing required field
     String requestBody = """
         {
@@ -73,7 +74,7 @@ class EmailControllerNoSecurityTest {
   }
 
   @Test
-  void sendEmail_withServiceException_shouldReturnInternalServerError() throws Exception {
+  void sendEmailWithServiceExceptionShouldReturnInternalServerError() throws Exception {
     // Arrange
     doThrow(new RuntimeException("Service error")).when(emailService).sendEmail(any());
 

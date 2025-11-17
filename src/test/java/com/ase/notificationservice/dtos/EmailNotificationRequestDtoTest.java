@@ -2,10 +2,12 @@ package com.ase.notificationservice.dtos;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ase.notificationservice.enums.EmailTemplate;
+
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.Test;
-import com.ase.notificationservice.enums.EmailTemplate;
 
 /**
  * Unit tests for EmailNotificationRequestDto.
@@ -13,10 +15,10 @@ import com.ase.notificationservice.enums.EmailTemplate;
 class EmailNotificationRequestDtoTest {
 
   @Test
-  void builder_withAllFields_shouldCreateDto() {
+  void builderWithAllFieldsShouldCreateDto() {
     // Arrange
     List<String> recipients = List.of("test1@example.com", "test2@example.com");
-    Map<String, Object> variables = Map.of("name", "John", "age", 30);
+    Map<String, Object> variables = Map.of("name", "John", "age", 30 /* age */);
 
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
@@ -40,7 +42,7 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void builder_withMinimalFields_shouldCreateDto() {
+  void builderWithMinimalFieldsShouldCreateDto() {
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
         .to(List.of("minimal@example.com"))
@@ -58,7 +60,7 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void builder_withTemplateOnly_shouldCreateDto() {
+  void builderWithTemplateOnlyShouldCreateDto() {
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
         .to(List.of("template@example.com"))
@@ -74,14 +76,13 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void builder_withMultipleRecipients_shouldCreateDto() {
+  void builderWithMultipleRecipientsShouldCreateDto() {
     // Arrange
     List<String> recipients = List.of(
         "user1@example.com",
         "user2@example.com",
         "user3@example.com",
-        "admin@example.com"
-    );
+"user4@example.com");
 
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
@@ -96,12 +97,12 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void builder_withComplexVariables_shouldCreateDto() {
+  void builderWithComplexVariablesShouldCreateDto() {
     // Arrange
     Map<String, Object> complexVariables = Map.of(
-        "user", Map.of("name", "John Doe", "id", 123),
+        "user", Map.of("name", "John Doe", "id", 123 /* test ID */),
         "items", List.of("item1", "item2", "item3"),
-        "total", 99.99,
+        "total", 99.99 /* price */,
         "isVip", true
     );
 
@@ -115,14 +116,14 @@ class EmailNotificationRequestDtoTest {
 
     // Assert
     assertThat(dto.variables()).isEqualTo(complexVariables);
-    assertThat(dto.variables().get("user")).isEqualTo(Map.of("name", "John Doe", "id", 123));
+    assertThat(dto.variables().get("user")).isEqualTo(Map.of("name", "John Doe", "id", 123 /* test ID */));
     assertThat(dto.variables().get("items")).isEqualTo(List.of("item1", "item2", "item3"));
     assertThat(dto.variables().get("total")).isEqualTo(99.99);
     assertThat(dto.variables().get("isVip")).isEqualTo(true);
   }
 
   @Test
-  void equals_withSameValues_shouldReturnTrue() {
+  void equalsWithSameValuesShouldReturnTrue() {
     // Arrange
     EmailNotificationRequestDto dto1 = EmailNotificationRequestDto.builder()
         .to(List.of("test@example.com"))
@@ -141,7 +142,7 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void equals_withDifferentValues_shouldReturnFalse() {
+  void equalsWithDifferentValuesShouldReturnFalse() {
     // Arrange
     EmailNotificationRequestDto dto1 = EmailNotificationRequestDto.builder()
         .to(List.of("test1@example.com"))
@@ -158,7 +159,7 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void hashCode_withSameValues_shouldReturnSameHash() {
+  void hashCodeWithSameValuesShouldReturnSameHash() {
     // Arrange
     EmailNotificationRequestDto dto1 = EmailNotificationRequestDto.builder()
         .to(List.of("hash@example.com"))
@@ -175,7 +176,7 @@ class EmailNotificationRequestDtoTest {
   }
 
   @Test
-  void toString_shouldIncludeAllFields() {
+  void toStringShouldIncludeAllFields() {
     // Arrange
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
         .to(List.of("toString@example.com"))

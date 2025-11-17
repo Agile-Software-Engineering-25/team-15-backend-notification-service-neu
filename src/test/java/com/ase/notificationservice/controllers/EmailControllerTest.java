@@ -8,22 +8,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.services.EmailService;
+
 import java.io.UnsupportedEncodingException;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-import com.ase.notificationservice.services.EmailService;
 
 /**
  * Unit tests for EmailController - DISABLED DUE TO SECURITY ISSUES.
@@ -42,7 +41,7 @@ class EmailControllerTest {
   private EmailService emailService;
 
   @Test
-  void sendEmail_withValidRequest_shouldReturnNoContent() throws Exception {
+  void sendEmailWithValidRequestShouldReturnNoContent() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -64,7 +63,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withTemplate_shouldReturnNoContent() throws Exception {
+  void sendEmailWithTemplateShouldReturnNoContent() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -90,7 +89,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withInvalidRequest_shouldReturnBadRequest() throws Exception {
+  void sendEmailWithInvalidRequestShouldReturnBadRequest() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -114,7 +113,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withMailAuthenticationException_shouldReturnUnauthorized() throws Exception {
+  void sendEmailWithMailAuthenticationExceptionShouldReturnUnauthorized() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -138,7 +137,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withMessagingException_shouldReturnBadGateway() throws Exception {
+  void sendEmailWithMessagingExceptionShouldReturnBadGateway() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -162,7 +161,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withUnsupportedEncodingException_shouldReturnBadGateway() throws Exception {
+  void sendEmailWithUnsupportedEncodingExceptionShouldReturnBadGateway() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -186,7 +185,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withMultipleRecipients_shouldReturnNoContent() throws Exception {
+  void sendEmailWithMultipleRecipientsShouldReturnNoContent() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -208,7 +207,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withReplyTo_shouldReturnNoContent() throws Exception {
+  void sendEmailWithReplyToShouldReturnNoContent() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -231,7 +230,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withCtaLink_shouldReturnNoContent() throws Exception {
+  void sendEmailWithCtaLinkShouldReturnNoContent() throws Exception {
     // Arrange
     String requestBody = """
         {
@@ -257,7 +256,7 @@ class EmailControllerTest {
   }
 
   @Test
-  void sendEmail_withInvalidJsonFormat_shouldReturnBadRequest() throws Exception {
+  void sendEmailWithInvalidJsonFormatShouldReturnBadRequest() throws Exception {
     // Arrange
     String invalidJson = """
         {

@@ -9,6 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.enums.EmailTemplate;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +26,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-import com.ase.notificationservice.enums.EmailTemplate;
 
 /**
  * Unit tests for EmailService.
@@ -55,7 +55,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withValidRequest_shouldSendSuccessfully()
+  void sendEmailWithValidRequestShouldSendSuccessfully()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     Map<String, Object> variables = new HashMap<>();
@@ -83,7 +83,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withTextOnly_shouldSendWithPreFormattedHtml()
+  void sendEmailWithTextOnlyShouldSendWithPreFormattedHtml()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
@@ -104,7 +104,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withEmptyRecipients_shouldThrowIllegalArgumentException() {
+  void sendEmailWithEmptyRecipientsShouldThrowIllegalArgumentException() {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
         .to(List.of())
@@ -122,7 +122,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withNullRecipients_shouldThrowIllegalArgumentException() {
+  void sendEmailWithNullRecipientsShouldThrowIllegalArgumentException() {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
         .to(null)
@@ -140,7 +140,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withNoContentAndNoTemplate_shouldThrowIllegalArgumentException() {
+  void sendEmailWithNoContentAndNoTemplateShouldThrowIllegalArgumentException() {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
         .to(List.of("recipient@example.com"))
@@ -159,7 +159,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withMultipleRecipients_shouldSendToEach()
+  void sendEmailWithMultipleRecipientsShouldSendToEach()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
@@ -179,7 +179,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withReplyTo_shouldSetReplyToAddress()
+  void sendEmailWithReplyToShouldSetReplyToAddress()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
@@ -200,7 +200,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withMailAuthenticationException_shouldPropagateException()
+  void sendEmailWithMailAuthenticationExceptionShouldPropagateException()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
@@ -218,7 +218,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withMessagingException_shouldPropagateException() {
+  void sendEmailWithMessagingExceptionShouldPropagateException() {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
         .to(List.of("recipient@example.com"))
@@ -235,7 +235,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withCtaLink_shouldIncludeInVariables()
+  void sendEmailWithCtaLinkShouldIncludeInVariables()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()
@@ -257,7 +257,7 @@ class EmailServiceTest {
   }
 
   @Test
-  void sendEmail_withPasswordTemplate_shouldUseCorrectTemplate()
+  void sendEmailWithPasswordTemplateShouldUseCorrectTemplate()
       throws MessagingException, UnsupportedEncodingException {
     // Arrange
     EmailNotificationRequestDto request = EmailNotificationRequestDto.builder()

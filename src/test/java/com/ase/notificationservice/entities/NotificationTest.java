@@ -2,10 +2,12 @@ package com.ase.notificationservice.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Instant;
-import org.junit.jupiter.api.Test;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
+
+import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for Notification entity.
@@ -13,10 +15,10 @@ import com.ase.notificationservice.enums.NotifyType;
 class NotificationTest {
 
   @Test
-  void builder_withAllFields_shouldCreateNotification() {
+  void builderWithAllFieldsShouldCreateNotification() {
     // Arrange
     Instant now = Instant.now();
-    Instant readAt = now.plusSeconds(60);
+    Instant readAt = now.plusSeconds(60 /* one minute */);
 
     // Act
     Notification notification = Notification.builder()
@@ -46,7 +48,7 @@ class NotificationTest {
   }
 
   @Test
-  void builder_withMinimalFields_shouldCreateNotification() {
+  void builderWithMinimalFieldsShouldCreateNotification() {
     // Act
     Notification notification = Notification.builder()
         .userId("user-456")
@@ -64,7 +66,7 @@ class NotificationTest {
   }
 
   @Test
-  void setters_shouldUpdateFields() {
+  void settersShouldUpdateFields() {
     // Arrange
     Notification notification = new Notification();
     Instant now = Instant.now();
@@ -77,7 +79,7 @@ class NotificationTest {
     notification.setShortDescription("New description");
     notification.setPriority(true);
     notification.setReceivedAt(now);
-    notification.setReadAt(now.plusSeconds(30));
+    notification.setReadAt(now.plusSeconds(30 /* thirty seconds */));
     notification.setNotifyType(NotifyType.Mail);
     notification.setNotificationType(NotificationType.Info);
 
@@ -89,13 +91,13 @@ class NotificationTest {
     assertThat(notification.getShortDescription()).isEqualTo("New description");
     assertThat(notification.isPriority()).isTrue();
     assertThat(notification.getReceivedAt()).isEqualTo(now);
-    assertThat(notification.getReadAt()).isEqualTo(now.plusSeconds(30));
+    assertThat(notification.getReadAt()).isEqualTo(now.plusSeconds(30 /* thirty seconds */));
     assertThat(notification.getNotifyType()).isEqualTo(NotifyType.Mail);
     assertThat(notification.getNotificationType()).isEqualTo(NotificationType.Info);
   }
 
   @Test
-  void toString_shouldIncludeAllFields() {
+  void toStringShouldIncludeAllFields() {
     // Arrange
     Notification notification = Notification.builder()
         .id("test-id")
@@ -115,7 +117,7 @@ class NotificationTest {
   }
 
   @Test
-  void equals_withSameId_shouldReturnTrue() {
+  void equalsWithSameIdShouldReturnTrue() {
     // Arrange
     Notification notification1 = Notification.builder()
         .id("same-id")
@@ -135,7 +137,7 @@ class NotificationTest {
   }
 
   @Test
-  void equals_withSameValues_shouldReturnTrue() {
+  void equalsWithSameValuesShouldReturnTrue() {
     // Arrange
     Instant now = Instant.now();
     
@@ -174,7 +176,7 @@ class NotificationTest {
   }
 
   @Test
-  void hashCode_withSameValues_shouldReturnSameHash() {
+  void hashCodeWithSameValuesShouldReturnSameHash() {
     // Arrange
     Instant now = Instant.now();
     
@@ -212,7 +214,7 @@ class NotificationTest {
   }
 
   @Test
-  void notification_withNullValues_shouldHandleGracefully() {
+  void notificationWithNullValuesShouldHandleGracefully() {
     // Act
     Notification notification = Notification.builder()
         .userId("user-123")
@@ -237,7 +239,7 @@ class NotificationTest {
   }
 
   @Test
-  void notification_withEmptyStrings_shouldPreserveValues() {
+  void notificationWithEmptyStringsShouldPreserveValues() {
     // Act
     Notification notification = Notification.builder()
         .userId("")

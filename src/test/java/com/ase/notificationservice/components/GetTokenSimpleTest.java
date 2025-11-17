@@ -3,15 +3,15 @@ package com.ase.notificationservice.components;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Unit tests for GetToken component.
@@ -29,7 +29,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withValidJson_shouldReturnAccessToken() throws JsonProcessingException {
+  void parseJsonWithValidJsonShouldReturnAccessToken() throws JsonProcessingException {
     // Arrange
     String jsonResponse = """
         {
@@ -47,7 +47,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withInvalidJson_shouldThrowJsonParseException() {
+  void parseJsonWithInvalidJsonShouldThrowJsonParseException() {
     // Arrange
     String invalidJson = "{ invalid json }";
 
@@ -56,7 +56,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withEmptyJson_shouldThrowJsonProcessingException() {
+  void parseJsonWithEmptyJsonShouldThrowJsonProcessingException() {
     // Arrange
     String emptyJson = "";
 
@@ -65,7 +65,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withMissingAccessToken_shouldReturnNull() throws JsonProcessingException {
+  void parseJsonWithMissingAccessTokenShouldReturnNull() throws JsonProcessingException {
     // Arrange
     String jsonWithoutAccessToken = """
         {
@@ -82,7 +82,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withNullAccessToken_shouldReturnNull() throws JsonProcessingException {
+  void parseJsonWithNullAccessTokenShouldReturnNull() throws JsonProcessingException {
     // Arrange
     String jsonWithNullAccessToken = """
         {
@@ -100,7 +100,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withComplexValidJson_shouldReturnAccessToken() throws JsonProcessingException {
+  void parseJsonWithComplexValidJsonShouldReturnAccessToken() throws JsonProcessingException {
     // Arrange
     String complexJson = """
         {
@@ -123,7 +123,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withEmptyAccessToken_shouldReturnEmptyString() throws JsonProcessingException {
+  void parseJsonWithEmptyAccessTokenShouldReturnEmptyString() throws JsonProcessingException {
     // Arrange
     String jsonWithEmptyAccessToken = """
         {
@@ -141,7 +141,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withMalformedJson_shouldThrowJsonProcessingException() {
+  void parseJsonWithMalformedJsonShouldThrowJsonProcessingException() {
     // Arrange
     String malformedJson = """
         {
@@ -155,7 +155,8 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withNestedAccessToken_shouldReturnFirstLevelToken() throws JsonProcessingException {
+  void parseJsonWithNestedAccessTokenShouldReturnFirstLevelToken()
+      throws JsonProcessingException {
     // Arrange
     String nestedJson = """
         {
@@ -174,7 +175,7 @@ class GetTokenSimpleTest {
   }
 
   @Test
-  void parseJson_withSpecialCharactersInToken_shouldReturnToken() throws JsonProcessingException {
+  void parseJsonWithSpecialCharactersInTokenShouldReturnToken() throws JsonProcessingException {
     // Arrange
     String jsonWithSpecialChars = """
         {

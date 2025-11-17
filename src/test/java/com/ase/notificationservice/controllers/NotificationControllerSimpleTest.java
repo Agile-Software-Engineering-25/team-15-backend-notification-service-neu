@@ -9,6 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.services.NotificationService;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.services.NotificationService;
 
 /**
  * Unit tests for NotificationController.
@@ -55,7 +56,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void getNotifications_withValidUserId_shouldReturnNotifications() throws Exception {
+  void getNotificationsWithValidUserIdShouldReturnNotifications() throws Exception {
     // Arrange
     List<Notification> notifications = List.of(testNotification);
     when(notificationService.getNotificationsForUser("user-123"))
@@ -73,7 +74,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void markAsRead_withExistingNotification_shouldReturnNotification() throws Exception {
+  void markAsReadWithExistingNotificationShouldReturnNotification() throws Exception {
     // Arrange
     when(notificationService.getAndMarkAsRead("test-id"))
         .thenReturn(Optional.of(testNotification));
@@ -88,7 +89,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void markAsRead_withNonExistentNotification_shouldReturnNotFound() throws Exception {
+  void markAsReadWithNonExistentNotificationShouldReturnNotFound() throws Exception {
     // Arrange
     when(notificationService.getAndMarkAsRead("non-existent"))
         .thenReturn(Optional.empty());
@@ -101,7 +102,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void markAsUnread_withExistingNotification_shouldReturnNotification() throws Exception {
+  void markAsUnreadWithExistingNotificationShouldReturnNotification() throws Exception {
     // Arrange
     when(notificationService.getAndMarkAsUnread("test-id"))
         .thenReturn(Optional.of(testNotification));
@@ -116,7 +117,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void markAsUnread_withNonExistentNotification_shouldReturnNotFound() throws Exception {
+  void markAsUnreadWithNonExistentNotificationShouldReturnNotFound() throws Exception {
     // Arrange
     when(notificationService.getAndMarkAsUnread("non-existent"))
         .thenReturn(Optional.empty());
@@ -129,7 +130,7 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void getNotifications_withEmptyResult_shouldReturnEmptyArray() throws Exception {
+  void getNotificationsWithEmptyResultShouldReturnEmptyArray() throws Exception {
     // Arrange
     when(notificationService.getNotificationsForUser("user-456"))
         .thenReturn(List.of());
@@ -144,8 +145,9 @@ class NotificationControllerUnitTest {
   }
 
   @Test
-  void getNotifications_withMultipleNotifications_shouldReturnAll() throws Exception {
+  void getNotificationsWithMultipleNotificationsShouldReturnAll() throws Exception {
     // Arrange
+    final int oneMinute = 60;
     Notification notification2 = Notification.builder()
         .id("test-id-2")
         .userId("user-123")
@@ -153,7 +155,7 @@ class NotificationControllerUnitTest {
         .title("Second title")
         .notifyType(NotifyType.Mail)
         .notificationType(NotificationType.Warning)
-        .receivedAt(Instant.now().minusSeconds(60))
+        .receivedAt(Instant.now().minusSeconds(oneMinute))
         .build();
 
     List<Notification> notifications = List.of(testNotification, notification2);

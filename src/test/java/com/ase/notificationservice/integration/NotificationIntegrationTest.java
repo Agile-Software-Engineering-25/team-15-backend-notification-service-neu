@@ -6,6 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.repositories.NotificationRepository;
+
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.repositories.NotificationRepository;
 
 /**
  * Integration tests for the notification workflow.
@@ -42,7 +43,7 @@ class NotificationIntegrationTest {
   }
 
   @Test
-  void createAndRetrieveNotification_shouldWorkEndToEnd() throws Exception {
+  void createAndRetrieveNotificationShouldWorkEndToEnd() throws Exception {
     // Arrange - Create a notification directly in the repository
     Notification notification = Notification.builder()
         .userId("integration-user")
@@ -70,7 +71,7 @@ class NotificationIntegrationTest {
   }
 
   @Test
-  void markNotificationAsRead_shouldUpdateDatabase() throws Exception {
+  void markNotificationAsReadShouldUpdateDatabase() throws Exception {
     // Arrange - Create a notification
     Notification notification = Notification.builder()
         .userId("read-test-user")
@@ -97,7 +98,7 @@ class NotificationIntegrationTest {
   }
 
   @Test
-  void markNotificationAsUnread_shouldClearReadAt() throws Exception {
+  void markNotificationAsUnreadShouldClearReadAt() throws Exception {
     // Arrange - Create a notification and mark it as read
     Notification notification = Notification.builder()
         .userId("unread-test-user")
@@ -124,9 +125,12 @@ class NotificationIntegrationTest {
   }
 
   @Test
-  void getNotificationsForUser_withMultipleNotifications_shouldReturnAll() throws Exception {
+  void getNotificationsForUserWithMultipleNotificationsShouldReturnAll() throws Exception {
     // Arrange - Create multiple notifications for the same user
     String userId = "multi-notification-user";
+    final int twoMinutes = 120;
+    final int oneMinute = 60;
+    final int expectedCount = 3;
 
     Notification notification1 = Notification.builder()
         .userId(userId)
@@ -134,7 +138,7 @@ class NotificationIntegrationTest {
         .title("Notification 1")
         .notifyType(NotifyType.UI)
         .notificationType(NotificationType.Info)
-        .receivedAt(Instant.now().minusSeconds(120))
+        .receivedAt(Instant.now().minusSeconds(twoMinutes))
         .build();
 
     Notification notification2 = Notification.builder()
@@ -143,7 +147,7 @@ class NotificationIntegrationTest {
         .title("Notification 2")
         .notifyType(NotifyType.Mail)
         .notificationType(NotificationType.Warning)
-        .receivedAt(Instant.now().minusSeconds(60))
+        .receivedAt(Instant.now().minusSeconds(oneMinute))
         .build();
 
     Notification notification3 = Notification.builder()
@@ -163,14 +167,14 @@ class NotificationIntegrationTest {
             .param("userId", userId))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$.length()").value(3))
+        .andExpect(jsonPath("$.length()").value(expectedCount))
         .andExpect(jsonPath("$[?(@.title == 'Notification 1')]").exists())
         .andExpect(jsonPath("$[?(@.title == 'Notification 2')]").exists())
         .andExpect(jsonPath("$[?(@.title == 'Notification 3')]").exists());
   }
 
   @Test
-  void getNotificationsForUser_withNoNotifications_shouldReturnEmptyArray() throws Exception {
+  void getNotificationsForUserWithNoNotificationsShouldReturnEmptyArray() throws Exception {
     // Act & Assert
     mockMvc.perform(get("/notifications")
             .param("userId", "non-existent-user"))
@@ -180,21 +184,21 @@ class NotificationIntegrationTest {
   }
 
   @Test
-  void markNonExistentNotificationAsRead_shouldReturnNotFound() throws Exception {
+  void markNonExistentNotificationAsReadShouldReturnNotFound() throws Exception {
     // Act & Assert
     mockMvc.perform(post("/notifications/mark-as-read/non-existent-id"))
         .andExpect(status().isNotFound());
   }
 
   @Test
-  void markNonExistentNotificationAsUnread_shouldReturnNotFound() throws Exception {
+  void markNonExistentNotificationAsUnreadShouldReturnNotFound() throws Exception {
     // Act & Assert
     mockMvc.perform(post("/notifications/mark-as-unread/non-existent-id"))
         .andExpect(status().isNotFound());
   }
 
   @Test
-  void notificationPersistence_shouldMaintainAllFields() throws Exception {
+  void notificationPersistenceShouldMaintainAllFields() throws Exception {
     // Arrange - Create a comprehensive notification
     Notification comprehensive = Notification.builder()
         .userId("comprehensive-user")
@@ -215,9 +219,11 @@ class NotificationIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(saved.getId()))
         .andExpect(jsonPath("$[0].userId").value("comprehensive-user"))
-        .andExpect(jsonPath("$[0].message").value("Comprehensive test message with special characters: !@#$%^&*()"))
+        .andExpect(jsonPath("$[0].message").value(
+            "Comprehensive test message with special characters: !@#$%^&*()"))
         .andExpect(jsonPath("$[0].title").value("Comprehensive Test Title"))
-        .andExpect(jsonPath("$[0].shortDescription").value("A comprehensive test description"))
+        .andExpect(jsonPath("$[0].shortDescription")
+            .value("A comprehensive test description"))
         .andExpect(jsonPath("$[0].priority").value(true))
         .andExpect(jsonPath("$[0].notifyType").value("All"))
         .andExpect(jsonPath("$[0].notificationType").value("Warning"));
