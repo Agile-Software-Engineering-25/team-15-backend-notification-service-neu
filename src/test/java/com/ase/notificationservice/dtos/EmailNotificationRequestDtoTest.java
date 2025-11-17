@@ -3,10 +3,8 @@ package com.ase.notificationservice.dtos;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ase.notificationservice.enums.EmailTemplate;
-
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -17,8 +15,9 @@ class EmailNotificationRequestDtoTest {
   @Test
   void builderWithAllFieldsShouldCreateDto() {
     // Arrange
+    final int age = 30;
     List<String> recipients = List.of("test1@example.com", "test2@example.com");
-    Map<String, Object> variables = Map.of("name", "John", "age", 30 /* age */);
+    Map<String, Object> variables = Map.of("name", "John", "age", age);
 
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
@@ -78,11 +77,12 @@ class EmailNotificationRequestDtoTest {
   @Test
   void builderWithMultipleRecipientsShouldCreateDto() {
     // Arrange
+    final int expectedSize = 4;
     List<String> recipients = List.of(
         "user1@example.com",
         "user2@example.com",
         "user3@example.com",
-"user4@example.com");
+        "user4@example.com");
 
     // Act
     EmailNotificationRequestDto dto = EmailNotificationRequestDto.builder()
@@ -92,17 +92,19 @@ class EmailNotificationRequestDtoTest {
         .build();
 
     // Assert
-    assertThat(dto.to()).hasSize(4);
+    assertThat(dto.to()).hasSize(expectedSize);
     assertThat(dto.to()).containsExactlyElementsOf(recipients);
   }
 
   @Test
   void builderWithComplexVariablesShouldCreateDto() {
     // Arrange
+    final int userId = 123;
+    final double totalPrice = 99.99;
     Map<String, Object> complexVariables = Map.of(
-        "user", Map.of("name", "John Doe", "id", 123 /* test ID */),
+        "user", Map.of("name", "John Doe", "id", userId),
         "items", List.of("item1", "item2", "item3"),
-        "total", 99.99 /* price */,
+        "total", totalPrice,
         "isVip", true
     );
 
@@ -116,9 +118,10 @@ class EmailNotificationRequestDtoTest {
 
     // Assert
     assertThat(dto.variables()).isEqualTo(complexVariables);
-    assertThat(dto.variables().get("user")).isEqualTo(Map.of("name", "John Doe", "id", 123 /* test ID */));
+    assertThat(dto.variables().get("user")).isEqualTo(
+        Map.of("name", "John Doe", "id", userId));
     assertThat(dto.variables().get("items")).isEqualTo(List.of("item1", "item2", "item3"));
-    assertThat(dto.variables().get("total")).isEqualTo(99.99);
+    assertThat(dto.variables().get("total")).isEqualTo(totalPrice);
     assertThat(dto.variables().get("isVip")).isEqualTo(true);
   }
 

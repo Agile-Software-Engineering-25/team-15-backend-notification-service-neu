@@ -10,9 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
 import com.ase.notificationservice.services.EmailService;
-
-import java.io.UnsupportedEncodingException;
 import jakarta.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

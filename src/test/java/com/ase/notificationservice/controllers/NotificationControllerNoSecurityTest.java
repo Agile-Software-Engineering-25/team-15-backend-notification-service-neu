@@ -11,7 +11,6 @@ import com.ase.notificationservice.entities.Notification;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
 import com.ase.notificationservice.services.NotificationService;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;

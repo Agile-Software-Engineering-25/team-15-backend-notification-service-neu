@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,6 +30,7 @@ public class TestMailConfig {
     } catch (Exception ignored) {
       // If something goes wrong, tests can still stub behaviour per-test
     }
+    
     return mockSender;
   }
 }

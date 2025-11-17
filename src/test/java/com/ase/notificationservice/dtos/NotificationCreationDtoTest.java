@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ase.notificationservice.enums.EmailTemplate;
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
-
 import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,10 +16,11 @@ class NotificationCreationDtoTest {
   @Test
   void settersAndGettersWithAllFieldsShouldWorkCorrectly() {
     // Arrange
+    final int testValue = 42;
     NotificationCreationDto dto = new NotificationCreationDto();
     String[] users = {"user1", "user2", "user3"};
     String[] groups = {"group1", "group2"};
-    Map<String, Object> variables = Map.of("key1", "value1", "key2", 42 /* test value */);
+    Map<String, Object> variables = Map.of("key1", "value1", "key2", testValue);
 
     // Act
     dto.setUsers(users);
@@ -98,10 +97,11 @@ class NotificationCreationDtoTest {
   @Test
   void setVariablesWithComplexMapShouldWork() {
     // Arrange
+    final int testNumber = 123;
     NotificationCreationDto dto = new NotificationCreationDto();
     Map<String, Object> complexVariables = Map.of(
         "string", "text",
-        "number", 123,
+        "number", testNumber,
         "boolean", true,
         "nested", Map.of("inner", "value")
     );
@@ -112,7 +112,7 @@ class NotificationCreationDtoTest {
     // Assert
     assertThat(dto.getVariables()).isEqualTo(complexVariables);
     assertThat(dto.getVariables().get("string")).isEqualTo("text");
-    assertThat(dto.getVariables().get("number")).isEqualTo(123);
+    assertThat(dto.getVariables().get("number")).isEqualTo(testNumber);
     assertThat(dto.getVariables().get("boolean")).isEqualTo(true);
     assertThat(dto.getVariables().get("nested")).isEqualTo(Map.of("inner", "value"));
   }

@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ase.notificationservice.enums.NotificationType;
 import com.ase.notificationservice.enums.NotifyType;
-
 import java.time.Instant;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -17,8 +15,9 @@ class NotificationTest {
   @Test
   void builderWithAllFieldsShouldCreateNotification() {
     // Arrange
+    final int oneMinute = 60;
     Instant now = Instant.now();
-    Instant readAt = now.plusSeconds(60 /* one minute */);
+    Instant readAt = now.plusSeconds(oneMinute);
 
     // Act
     Notification notification = Notification.builder()
@@ -77,9 +76,10 @@ class NotificationTest {
     notification.setMessage("New message");
     notification.setTitle("New title");
     notification.setShortDescription("New description");
+    final int thirtySeconds = 30;
     notification.setPriority(true);
     notification.setReceivedAt(now);
-    notification.setReadAt(now.plusSeconds(30 /* thirty seconds */));
+    notification.setReadAt(now.plusSeconds(thirtySeconds));
     notification.setNotifyType(NotifyType.Mail);
     notification.setNotificationType(NotificationType.Info);
 
@@ -91,7 +91,7 @@ class NotificationTest {
     assertThat(notification.getShortDescription()).isEqualTo("New description");
     assertThat(notification.isPriority()).isTrue();
     assertThat(notification.getReceivedAt()).isEqualTo(now);
-    assertThat(notification.getReadAt()).isEqualTo(now.plusSeconds(30 /* thirty seconds */));
+    assertThat(notification.getReadAt()).isEqualTo(now.plusSeconds(thirtySeconds));
     assertThat(notification.getNotifyType()).isEqualTo(NotifyType.Mail);
     assertThat(notification.getNotificationType()).isEqualTo(NotificationType.Info);
   }
