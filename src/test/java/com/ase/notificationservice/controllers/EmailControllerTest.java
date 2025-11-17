@@ -8,10 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-import com.ase.notificationservice.services.EmailService;
-import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.services.EmailService;
 
 /**
  * Unit tests for EmailController - DISABLED DUE TO SECURITY ISSUES.

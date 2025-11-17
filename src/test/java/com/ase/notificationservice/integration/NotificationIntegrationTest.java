@@ -6,10 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.repositories.NotificationRepository;
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.repositories.NotificationRepository;
 
 /**
  * Integration tests for the notification workflow.

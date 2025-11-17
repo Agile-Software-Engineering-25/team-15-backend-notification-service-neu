@@ -9,14 +9,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
-import com.ase.notificationservice.enums.EmailTemplate;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +26,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import com.ase.notificationservice.dtos.EmailNotificationRequestDto;
+import com.ase.notificationservice.enums.EmailTemplate;
 
 /**
  * Unit tests for EmailService.

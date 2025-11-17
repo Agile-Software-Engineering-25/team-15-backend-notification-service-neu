@@ -30,7 +30,6 @@ public class TestMailConfig {
     } catch (Exception ignored) {
       // If something goes wrong, tests can still stub behaviour per-test
     }
-    
     return mockSender;
   }
 }

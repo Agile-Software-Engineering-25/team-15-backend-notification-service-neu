@@ -7,10 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.services.NotificationService;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.services.NotificationService;
 
 /**
  * Unit tests for NotificationController without security.

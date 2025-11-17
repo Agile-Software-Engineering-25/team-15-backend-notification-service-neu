@@ -2,10 +2,10 @@ package com.ase.notificationservice.dtos;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ase.notificationservice.enums.EmailTemplate;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import com.ase.notificationservice.enums.EmailTemplate;
 
 /**
  * Unit tests for EmailNotificationRequestDto.

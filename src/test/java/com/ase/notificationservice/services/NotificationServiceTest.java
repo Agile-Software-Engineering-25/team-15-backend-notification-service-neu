@@ -10,12 +10,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.ase.notificationservice.config.RepositoryConfig;
-import com.ase.notificationservice.config.UserServiceConfig;
-import com.ase.notificationservice.entities.Notification;
-import com.ase.notificationservice.enums.NotificationType;
-import com.ase.notificationservice.enums.NotifyType;
-import com.ase.notificationservice.repositories.NotificationRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import com.ase.notificationservice.config.RepositoryConfig;
+import com.ase.notificationservice.config.UserServiceConfig;
+import com.ase.notificationservice.entities.Notification;
+import com.ase.notificationservice.enums.NotificationType;
+import com.ase.notificationservice.enums.NotifyType;
+import com.ase.notificationservice.repositories.NotificationRepository;
 
 /**
  * Unit tests for NotificationService.
