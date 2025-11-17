@@ -40,5 +40,9 @@ public class EmailController {
       return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
           .body(Map.of("error", "Mail server error"));
     }
+    catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", "Internal server error: " + e.getMessage()));
+    }
   }
 }
