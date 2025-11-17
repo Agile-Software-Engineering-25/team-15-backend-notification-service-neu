@@ -1,7 +1,6 @@
 package com.ase.notificationservice.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import com.ase.notificationservice.enums.NotificationType;

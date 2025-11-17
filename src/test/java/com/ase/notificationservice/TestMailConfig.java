@@ -2,7 +2,6 @@ package com.ase.notificationservice;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +29,7 @@ public class TestMailConfig {
     } catch (Exception ignored) {
       // If something goes wrong, tests can still stub behaviour per-test
     }
+    
     return mockSender;
   }
 }
