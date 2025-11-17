@@ -26,7 +26,8 @@ public class TestMailConfig {
       // Return a simple MimeMessage when createMimeMessage is called to avoid NPE
       MimeMessage mime = new MimeMessage((Session) null);
       when(mockSender.createMimeMessage()).thenReturn(mime);
-    } catch (Exception ignored) {
+    } 
+    catch (Exception ignored) {
       // If something goes wrong, tests can still stub behaviour per-test
     }
     
